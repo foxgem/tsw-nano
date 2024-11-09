@@ -1,0 +1,76 @@
+{
+  "name": "tsw-nano",
+  "version": "0.1.0",
+  "description": "Your tiny smart worker powered by Gemini Nano",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "build:firefox": "plasmo build --target=firefox-mv3 --zip",
+    "test": "jest",
+    "lint": "biome check",
+    "fix": "biome check --write",
+    "format": "biome format --write",
+    "removeUnused": "biome lint --fix --only=lint/correctness/noUnusedImports",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@plasmohq/storage": "^1.12.0",
+    "@radix-ui/react-toast": "^1.2.2",
+    "ai": "^3.4.16",
+    "autoprefixer": "^10.4.20",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.1",
+    "html-escaper": "^3.0.3",
+    "lodash": "^4.17.21",
+    "lucide-react": "^0.441.0",
+    "marked": "^14.1.2",
+    "next-themes": "^0.3.0",
+    "plasmo": "0.89.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@radix-ui/react-menubar": "^1.1.1",
+    "@radix-ui/react-scroll-area": "^1.1.0",
+    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.0",
+    "@types/chrome": "0.0.237",
+    "@types/dom-chromium-ai": "^0.0.2",
+    "@types/html-escaper": "^3.0.2",
+    "@types/jest": "^29.5.0",
+    "@types/lodash": "^4.17.9",
+    "@types/node": "18.19.50",
+    "@types/react": "18.3.5",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "^10.4.20",
+    "husky": "^9.1.6",
+    "postcss": "^8.4.47",
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss": "^3.4.11",
+    "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.19.1",
+    "typescript": "5.5.4"
+  },
+  "manifest": {
+    "permissions": ["contextMenus", "tabs", "storage", "alarms", "activeTab"],
+    "background": {
+      "service_worker": "background.ts"
+    },
+    "name": "tsw-nano - tiny smart worker powered by gemini nano",
+    "description": "Your tiny smart worker powered by Gemini Nano",
+    "version": "0.1.0",
+    "host_permissions": ["https://*/*"],
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "css": ["/src/css/global.css"],
+        "run_at": "document_start"
+      }
+    ]
+  },
+  "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
+}
