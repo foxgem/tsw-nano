@@ -1,7 +1,3 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import CircularButtonsContainer from "./components/CircularButtonsContainer";
-
 import { chattingHandler, summarizeSelected } from "./handlers";
 
 export const iconArray = [
@@ -19,11 +15,7 @@ export const iconArray = [
   },
 ];
 
-function createFloatingToggleButton() {
-  const containerDiv = document.createElement("div");
-  containerDiv.id = "tsw-buttons-container";
-  document.body.appendChild(containerDiv);
-
+function createFloatingTogglePanel() {
   const panel = document.createElement("div");
   panel.id = "tsw-toggle-panel";
   panel.style.cssText = `
@@ -43,19 +35,9 @@ function createFloatingToggleButton() {
     display: none;
   `;
   document.body.appendChild(panel);
-
-  const root = createRoot(containerDiv);
-  root.render(
-    React.createElement(CircularButtonsContainer, {
-      id: "tsw-buttons-container",
-      iconBtns: iconArray,
-    }),
-  );
-
-  document.body.appendChild(panel);
 }
 
-createFloatingToggleButton();
+createFloatingTogglePanel();
 
 chrome.runtime.onMessage.addListener((request) => {
   switch (request.action) {

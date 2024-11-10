@@ -14,7 +14,7 @@ import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
 import { cn, upperCaseFirstLetter } from "~/utils/commons";
-import { chatWithPage, suggestNext, summariseLongContext } from "~utils/ai";
+import { chatWithPage, summariseLongContext } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
 import { Textarea } from "./ui/textarea";
