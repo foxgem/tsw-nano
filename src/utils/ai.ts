@@ -96,6 +96,25 @@ export const summarise = async (text: string, messageElement: HTMLElement) => {
   }
 };
 
+export const summariseLongContext = async (text: string) => {
+  const canSummarize = await window.ai.summarizer.capabilities();
+  if (canSummarize.available === "no") {
+    return;
+  }
+
+  const summarizer = await window.ai.summarizer.create({
+    format: "plain-text",
+    length: "long",
+  });
+
+  try {
+    const summary = await summarizer.summarize(text);
+    return summary;
+  } catch (e) {
+    return e.message;
+  }
+};
+
 export const pageRag = (
   message: string,
   context: string,

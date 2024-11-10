@@ -64,5 +64,8 @@ chrome.runtime.onMessage.addListener((request) => {
         summarizeSelected("tsw-toggle-panel", request.text);
       }
       break;
+    case "openChat":
+      chattingHandler("tsw-toggle-panel");
+      break;
   }
 });

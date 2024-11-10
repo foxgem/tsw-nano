@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils/commons";
 
 import githubDark from "data-base64:/assets/github.svg";
 import githubLight from "data-base64:/assets/github_light.svg";

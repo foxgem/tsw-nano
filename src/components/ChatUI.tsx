@@ -13,8 +13,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
-import { cn, upperCaseFirstLetter } from "~lib/utils";
-import { chatWithPage } from "~utils/ai";
+import { cn, upperCaseFirstLetter } from "~/utils/commons";
+import { chatWithPage, summariseLongContext } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
 import { Textarea } from "./ui/textarea";
@@ -23,6 +23,21 @@ import { useToast } from "./ui/use-toast";
 marked.setOptions({
   breaks: true,
 });
+
+const prepareContext = async (pageText: string) => {
+  const cacheKey = `summarized_${window.location.pathname}`;
+  const cached = sessionStorage.getItem(cacheKey);
+
+  if (cached) return cached;
+
+  if (pageText.length >= 30000) {
+    const summarized = await summariseLongContext(pageText);
+    sessionStorage.setItem(cacheKey, summarized);
+    return summarized;
+  }
+
+  return pageText;
+};
 
 type Message = {
   id: number;
@@ -136,7 +151,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
 
         const textStream = await chatWithPage(
           newMessages.slice(0, -1),
-          pageText,
+          await prepareContext(pageText),
           newMessages[newMessages.length - 1].content,
           abortController.current.signal,
         );
