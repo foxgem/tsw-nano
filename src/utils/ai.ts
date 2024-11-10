@@ -115,6 +115,26 @@ export const summariseLongContext = async (text: string) => {
   }
 };
 
+export const suggestNext = async (text: string) => {
+  try {
+    await checkNanoAvailability();
+    const nano = await window.ai.languageModel.create({
+      systemPrompt:
+        "You are an inputting helper to complete the whole sentence starting with the provided words. The result must start with the provided words. Return only one result to complete the sentence without additional information.",
+      initialPrompts: [
+        {
+          role: "assistant",
+          content: "Try to undesrand the user's intention well.",
+        },
+      ],
+    });
+    const result = await nano.prompt(text);
+    return result;
+  } catch (e) {
+    return e.message;
+  }
+};
+
 export const pageRag = (
   message: string,
   context: string,

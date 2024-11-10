@@ -14,7 +14,7 @@ import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
 import { cn, upperCaseFirstLetter } from "~/utils/commons";
-import { chatWithPage, summariseLongContext } from "~utils/ai";
+import { chatWithPage, suggestNext, summariseLongContext } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
 import { Textarea } from "./ui/textarea";
@@ -355,8 +355,13 @@ export function ChatUI({ pageText }: ChatUIProps) {
         <div className={chatStyles.inputContainer}>
           <Textarea
             value={inputValue}
-            onChange={(e) => {
+            onChange={async (e) => {
               setInputValue(e.target.value);
+
+              // if (e.target.value.length >= 2) {
+              //   console.log(await suggestNext(e.target.value));
+              // }
+
               // Auto-resize the textarea
               const textarea = e.target as HTMLTextAreaElement;
               textarea.style.height = "auto";
