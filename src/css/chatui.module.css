@@ -128,7 +128,38 @@
 }
 
 .messageContent {
-  @apply rounded-lg max-w-[80%];
+  @apply rounded-lg max-w-[95%];
+}
+
+.assistantContent {
+  @apply w-full;
+}
+
+.messageContent table {
+  @apply rounded-lg w-full border-collapse;
+  border: 1px solid #e5e7eb !important;
+}
+
+.messageContent table th,
+.messageContent table td {
+  border: 1px solid #e5e7eb !important;
+  @apply p-2;
+}
+
+.messageContent table tr {
+  @apply hover:bg-gray-50;
+}
+
+.messageContent table tbody tr:nth-child(odd) {
+  @apply bg-white;
+}
+
+.messageContent table tbody tr:nth-child(even) {
+  @apply bg-gray-50;
+}
+
+.messageContent table thead {
+  @apply bg-gray-100;
 }
 
 .loadingContainer {
@@ -161,7 +192,6 @@
 
 .editActions {
   display: flex;
-  gap: 0.5rem;
   margin-left: 0.5rem;
 }
 
@@ -177,7 +207,7 @@
 
 .textarea {
   flex-grow: 1;
-  min-height: 40px;
+  min-height: 80px;
   max-height: 120px;
   border: 0;
   border-radius: 8px;
@@ -188,6 +218,10 @@
 .stopIcon {
   height: 16px;
   width: 16px;
+}
+
+.submitIcon {
+  color: rgb(0, 123, 255);
 }
 
 .actionContainer {
