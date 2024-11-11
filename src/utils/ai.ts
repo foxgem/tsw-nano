@@ -143,20 +143,12 @@ export const pageRag = (
   // genAIFunction(pageRagPrompt(message, context));
 };
 
-export const chatWithPage = async (
-  historyMsgs: Array<
-    AILanguageModelAssistantPrompt | AILanguageModelUserPrompt
-  >,
-  pageText: string,
-  userMessage: string,
-  signal?: AbortSignal,
-) => {
+export const chatWithPage = async (pageText: string, userMessage: string) => {
   let session: AILanguageModel | undefined;
   try {
     await checkNanoAvailability();
     const session = await window.ai.languageModel.create({
       systemPrompt: pageRagPrompt(pageText),
-      initialPrompts: historyMsgs,
     });
     return session.prompt(userMessage);
   } catch (e) {

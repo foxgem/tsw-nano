@@ -150,10 +150,8 @@ export function ChatUI({ pageText }: ChatUIProps) {
         ]);
 
         const textStream = await chatWithPage(
-          newMessages.slice(0, -1),
           await prepareContext(pageText),
           newMessages[newMessages.length - 1].content,
-          abortController.current.signal,
         );
         let fullText = "";
 
