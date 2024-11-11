@@ -3,13 +3,12 @@
   font-size: 14px;
   line-height: 1.25rem;
   cursor: pointer;
-  height: 28px;
   color: black;
   display: flex;
   justify-content: center;
   border: 0;
   align-items: center;
-  border-radius: 100%;
+  border-radius: 100% !important;
   height: 36px !important;
   width: 36px !important;
   background-color: unset;
@@ -35,6 +34,11 @@
 
 .tswActionBtn svg {
   transition: transform 0.2s ease-in-out;
+}
+
+.tswLargeIcon svg {
+  width: 30px;
+  height: 30px;
 }
 
 .tswPanelFooter {
@@ -197,7 +201,7 @@
 
 .inputContainer {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   width: 100%;
   border: 1px solid #e0e0e0;

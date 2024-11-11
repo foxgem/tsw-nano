@@ -24,7 +24,7 @@ function MainPage() {
   return (
     <div className="w-[350px] h-auto min-h-[246px] flex flex-col pb-12">
       <Header />
-      <nav className="flex flex-col mx-auto px-5 mt-4 flex-1 w-[60%]">
+      <nav className="flex flex-col mx-auto px-5 mt-4 flex-1 w-full max-w-[250px]">
         <Button
           variant="outline"
           onClick={newChat}
@@ -32,7 +32,7 @@ function MainPage() {
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
-            "bg-accent hover:bg-primary hover:text-white dark:text-white",
+            "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
           )}
         >
           <BotMessageSquare className="mr-2" />
@@ -45,7 +45,7 @@ function MainPage() {
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
-            "bg-accent  hover:bg-primary hover:text-white",
+            "bg-accent  hover:bg-primary hover:text-white justify-center",
           )}
         >
           <NotepadText className="mr-2" />
@@ -58,7 +58,7 @@ function MainPage() {
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
-            "bg-accent hover:bg-primary hover:text-white dark:text-white",
+            "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
           )}
         >
           <Settings2 className="mr-2" />
