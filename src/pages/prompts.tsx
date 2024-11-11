@@ -1,174 +1,277 @@
-import { Plus, Search, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { Plus, Trash2, Save, X, AlertTriangle } from "lucide-react";
+import { Alert, AlertDescription } from "~/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "~/components/ui/alert-dialog";
+import { Button } from "~/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 
-interface Prompt {
-  id: string;
-  title: string;
-  content: string;
-}
-
-const PromptsManager = () => {
-  const [search, setSearch] = useState("");
-  const [prompts, setPrompts] = useState<Prompt[]>(() => {
-    const savedPrompts = localStorage.getItem("prompts");
-    return savedPrompts ? JSON.parse(savedPrompts) : [];
+const PromptManager = () => {
+  const [prompts, setPrompts] = useState([]);
+  const [currentPrompt, setCurrentPrompt] = useState({
+    title: "",
+    content: "",
   });
-  const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
-  const [newTitle, setNewTitle] = useState("");
-  const [newContent, setNewContent] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState("");
+  const [selectedPrompt, setSelectedPrompt] = useState(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [promptToDelete, setPromptToDelete] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem("prompts", JSON.stringify(prompts));
-  }, [prompts]);
-
-  const handleAddPrompt = () => {
-    const newPrompt = {
-      id: new Date().getTime().toString(),
-      title: "Untitled",
-      content: "",
-    };
-    setPrompts([...prompts, newPrompt]);
-    setSelectedPrompt(newPrompt);
-  };
-
-  const handleDeletePrompt = (id: string) => {
-    setPrompts(prompts.filter((prompt) => prompt.id !== id));
-    if (selectedPrompt?.id === id) {
-      setSelectedPrompt(null);
+    const savedPrompts = localStorage.getItem("prompts");
+    if (savedPrompts) {
+      setPrompts(JSON.parse(savedPrompts));
     }
+  }, []);
+
+  const saveToLocalStorage = (updatedPrompts) => {
+    localStorage.setItem("prompts", JSON.stringify(updatedPrompts));
+    setPrompts(updatedPrompts);
   };
 
-  const handleUpdatePrompt = (title: string, content: string) => {
-    if (selectedPrompt) {
-      setPrompts(
-        prompts.map((prompt) =>
-          prompt.id === selectedPrompt.id
-            ? {
-                ...prompt,
-                title,
-                content,
-              }
-            : prompt,
-        ),
+  const validatePrompt = (prompt) => {
+    if (!prompt.title.trim()) {
+      return "Title is required";
+    }
+    if (prompt.title.length < 3) {
+      return "Title must be at least 3 characters long";
+    }
+    if (!prompt.content.trim()) {
+      return "Content is required";
+    }
+    if (prompt.content.length < 10) {
+      return "Content must be at least 10 characters long";
+    }
+    if (prompt.title.length > 50) {
+      return "Title must be less than 50 characters";
+    }
+    return "";
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError("");
+
+    const validationError = validatePrompt(currentPrompt);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    const isTitleExists = prompts.some(
+      (prompt) =>
+        prompt.title.toLowerCase() === currentPrompt.title.toLowerCase() &&
+        (!isEditing || prompt.title !== selectedPrompt?.title),
+    );
+
+    if (isTitleExists) {
+      setError("A prompt with this title already exists");
+      return;
+    }
+
+    if (isEditing && selectedPrompt) {
+      const updatedPrompts = prompts.map((prompt) =>
+        prompt.title === selectedPrompt.title ? currentPrompt : prompt,
       );
+      saveToLocalStorage(updatedPrompts);
+    } else {
+      saveToLocalStorage([...prompts, currentPrompt]);
     }
+
+    setCurrentPrompt({ title: "", content: "" });
+    setIsEditing(false);
+    setSelectedPrompt(null);
+  };
+
+  const handleEdit = (prompt) => {
+    setCurrentPrompt(prompt);
+    setSelectedPrompt(prompt);
+    setIsEditing(true);
+    setError("");
+  };
+
+  const handleDelete = (prompt) => {
+    setPromptToDelete(prompt);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = () => {
+    const updatedPrompts = prompts.filter(
+      (p) => p.title !== promptToDelete.title,
+    );
+    saveToLocalStorage(updatedPrompts);
+    setShowDeleteDialog(false);
+    setPromptToDelete(null);
+    if (selectedPrompt?.title === promptToDelete.title) {
+      setSelectedPrompt(null);
+      setCurrentPrompt({ title: "", content: "" });
+      setIsEditing(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setCurrentPrompt({ title: "", content: "" });
+    setIsEditing(false);
+    setSelectedPrompt(null);
+    setError("");
+  };
+
+  const handlePromptSelect = (prompt) => {
+    setSelectedPrompt(prompt);
+    setCurrentPrompt(prompt);
+    setIsEditing(true);
+    setError("");
   };
 
   return (
-    <div className="w-[800px] h-[600px] bg-background">
-      <div className="w-full h-full flex">
-        {/* Left panel */}
-        <div className="w-72 flex flex-col border-r border-border">
-          {/* Left header with circles and add button */}
-          <div className="flex items-center justify-between p-3">
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-            </div>
-            <button
-              type="button"
-              className="text-muted-foreground hover:text-foreground"
-              title="Add new"
-              onClick={handleAddPrompt}
+    <div className="flex h-screen bg-gray-50">
+      {/* Left Panel */}
+      <div className="w-64 border-r bg-white p-4 overflow-y-auto">
+        <div className="mb-4">
+          <Button
+            className="w-full"
+            onClick={() => {
+              handleCancel();
+              setSelectedPrompt(null);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" /> New Prompt
+          </Button>
+        </div>
+        <div className="space-y-2">
+          {prompts.map((prompt) => (
+            <div
+              key={prompt.title}
+              className={`p-2 rounded cursor-pointer hover:bg-gray-100 ${
+                selectedPrompt?.title === prompt.title ? "bg-gray-100" : ""
+              }`}
+              onClick={() => handlePromptSelect(prompt)}
             >
-              <Plus className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Search bar */}
-          <div className="p-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full bg-muted text-foreground pl-9 pr-4 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Left content */}
-          <div className="flex-1 overflow-y-auto">
-            {prompts
-              .filter((prompt) =>
-                prompt.title.toLowerCase().includes(search.toLowerCase()),
-              )
-              .map((prompt) => (
-                <div
-                  key={prompt.id}
-                  className={`px-4 py-2 text-foreground hover:bg-accent cursor-pointer ${
-                    selectedPrompt?.id === prompt.id ? "bg-accent" : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedPrompt(prompt);
-                    setNewTitle(prompt.title);
-                    setNewContent(prompt.content);
+              <div className="flex justify-between items-center">
+                <span className="truncate text-sm font-medium">
+                  {prompt.title}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(prompt);
                   }}
                 >
-                  {selectedPrompt?.id === prompt.id ? newTitle : prompt.title}
-                </div>
-              ))}
-          </div>
-        </div>
-
-        {/* Right panel */}
-        <div className="flex-1 flex flex-col">
-          {/* Right header */}
-          <div className="flex items-center px-4 py-2 border-b border-border">
-            <input
-              type="text"
-              className="bg-transparent text-foreground flex-1 focus:outline-none"
-              value={newTitle}
-              onChange={(e) => {
-                setNewTitle(e.target.value);
-                handleUpdatePrompt(
-                  e.target.value,
-                  selectedPrompt?.content || "",
-                );
-              }}
-              placeholder="Untitled"
-            />
-            <div className="flex-1" />
-            {selectedPrompt && (
-              <button
-                type="button"
-                className="text-muted-foreground hover:text-foreground"
-                onClick={() => {
-                  setNewTitle("");
-                  handleDeletePrompt(selectedPrompt.id);
-                }}
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
-            )}
-          </div>
-
-          {/* Right content */}
-          <div className="flex-1 p-4 overflow-y-auto">
-            {selectedPrompt ? (
-              <textarea
-                className="w-full h-full bg-transparent text-foreground resize-none focus:outline-none"
-                value={newContent}
-                onChange={(e) => {
-                  setNewContent(e.target.value);
-                  handleUpdatePrompt(
-                    selectedPrompt?.title || "",
-                    e.target.value,
-                  );
-                }}
-                placeholder="Enter prompt content..."
-              />
-            ) : (
-              <div className="w-0.5 h-5 bg-primary animate-pulse" />
-            )}
-          </div>
+                  <Trash2 className="w-4 h-4 text-gray-500" />
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* Main Content */}
+      <div className="flex-1 p-4 overflow-y-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              {isEditing ? "Edit Prompt" : "Create New Prompt"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Input
+                  placeholder="Enter prompt title"
+                  value={currentPrompt.title}
+                  onChange={(e) =>
+                    setCurrentPrompt({
+                      ...currentPrompt,
+                      title: e.target.value,
+                    })
+                  }
+                  disabled={isEditing && selectedPrompt}
+                />
+              </div>
+              <div>
+                <Textarea
+                  placeholder="Enter prompt content"
+                  value={currentPrompt.content}
+                  onChange={(e) =>
+                    setCurrentPrompt({
+                      ...currentPrompt,
+                      content: e.target.value,
+                    })
+                  }
+                  rows={8}
+                />
+              </div>
+              {error && (
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              <div className="flex gap-2">
+                <Button type="submit">
+                  {isEditing ? (
+                    <>
+                      <Save className="w-4 h-4 mr-2" /> Update
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 mr-2" /> Add
+                    </>
+                  )}
+                </Button>
+                {(isEditing ||
+                  currentPrompt.title ||
+                  currentPrompt.content) && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCancel}
+                  >
+                    <X className="w-4 h-4 mr-2" /> Cancel
+                  </Button>
+                )}
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              prompt "{promptToDelete?.title}".
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowDeleteDialog(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
 
-export default PromptsManager;
+export default PromptManager;
