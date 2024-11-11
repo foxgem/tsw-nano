@@ -1,8 +1,8 @@
 "use client";
 import {
+  CircleArrowUp,
   CircleStop,
   Copy,
-  IterationCcw,
   Pencil,
   RefreshCw,
   SquareX,
@@ -135,7 +135,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
         setInputValue("");
         const textarea = document.getElementById("tsw-chat-textarea");
         if (textarea) {
-          textarea.style.height = "40px";
+          textarea.style.height = "80px";
         }
         setMessages(newMessages);
 
@@ -269,7 +269,12 @@ export function ChatUI({ pageText }: ChatUIProps) {
                   {m.role === "assistant" && (
                     <ActionIcon name={upperCaseFirstLetter(m.role)} />
                   )}
-                  <div className={chatStyles.messageContent}>
+                  <div
+                    className={cn(
+                      chatStyles.messageContent,
+                      m.role === "assistant" && chatStyles.assistantContent,
+                    )}
+                  >
                     {m.role === "user" || m.id === 0 ? (
                       <p
                         dangerouslySetInnerHTML={{
@@ -389,7 +394,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
             className={chatStyles.textarea}
             rows={1}
             style={{
-              minHeight: "40px",
+              minHeight: "80px",
               maxHeight: "200px",
               overflow: "auto",
               resize: "none",
@@ -397,8 +402,8 @@ export function ChatUI({ pageText }: ChatUIProps) {
             }}
             id="tsw-chat-textarea"
           />
-          {editingMessageId !== null && (
-            <div className={chatStyles.editActions}>
+          <div className={chatStyles.editActions}>
+            {editingMessageId !== null && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -407,26 +412,32 @@ export function ChatUI({ pageText }: ChatUIProps) {
               >
                 <SquareX />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={chatStyles.tswActionBtn}
-                onClick={(e) => handleEditSubmit(e)}
-              >
-                <IterationCcw />
-              </Button>
-            </div>
-          )}
-          {isStreaming && !editingMessageId && (
+            )}
             <Button
               variant="ghost"
               size="icon"
-              onClick={handleStopChat}
               className={chatStyles.tswActionBtn}
+              onClick={(e) => {
+                if (editingMessageId !== null) {
+                  handleEditSubmit(e);
+                } else {
+                  handleSend(e);
+                }
+              }}
             >
-              <CircleStop className={chatStyles.stopIcon} />
+              <CircleArrowUp className={chatStyles.submitIcon} />
             </Button>
-          )}
+            {isStreaming && !editingMessageId && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleStopChat}
+                className={chatStyles.tswActionBtn}
+              >
+                <CircleStop className={chatStyles.stopIcon} />
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </>

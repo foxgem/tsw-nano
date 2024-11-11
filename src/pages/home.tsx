@@ -1,8 +1,8 @@
 import { BotMessageSquare, NotepadText, Settings2 } from "lucide-react";
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
-import { Button } from "~components/ui/button";
 import { cn } from "~/utils/commons";
+import { Button } from "~components/ui/button";
 
 function MainPage() {
   return (
