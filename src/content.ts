@@ -15,6 +15,26 @@ export const iconArray = [
   },
 ];
 
+function attachNanoInputingAmplifier() {
+  document.addEventListener("keypress", (e) => {
+    if (
+      !(
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
+    ) {
+      return;
+    }
+
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+    if (target.value === "@nano") {
+      console.log(target.value, "---");
+    }
+  });
+}
+
+attachNanoInputingAmplifier();
+
 function createFloatingInput() {
   const container = document.createElement("div");
   container.style.cssText = `
@@ -31,6 +51,7 @@ function createFloatingInput() {
   `;
 
   const textarea = document.createElement("textarea");
+  textarea.id = "tsw-floating-input";
   textarea.style.cssText = `
     min-height: 80px;
     max-height: 200px;
@@ -73,7 +94,6 @@ function createFloatingInput() {
   document.body.appendChild(container);
 
   document.addEventListener("keydown", (e) => {
-    console.log(e);
     if (e.metaKey && e.shiftKey && e.key === "2") {
       e.preventDefault();
       container.style.display = "block";

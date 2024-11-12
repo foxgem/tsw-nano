@@ -11,7 +11,7 @@ function ContentWrapper() {
 
   // Apply different classes based on the route
   const containerClass =
-    location.pathname === "/prompts" ? "w-[800px] h-[600px]" : "w-[350px]";
+    location.pathname === "/" ? "w-[350px]" : "w-[800px] h-[600px]";
 
   return (
     <div className={containerClass}>

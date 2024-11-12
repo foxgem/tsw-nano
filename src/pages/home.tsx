@@ -17,8 +17,12 @@ function MainPage() {
     window.close();
   };
 
-  const gotoPromptsManager = () => {
+  const gotoPromptManager = () => {
     navigate("/prompts", {});
+  };
+
+  const gotoSettingManager = () => {
+    // navigate("/settings", {});
   };
 
   return (
@@ -40,7 +44,7 @@ function MainPage() {
         </Button>
         <Button
           variant="outline"
-          onClick={() => gotoPromptsManager()}
+          onClick={() => gotoPromptManager()}
           className={cn(
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
@@ -53,7 +57,7 @@ function MainPage() {
         </Button>
         <Button
           variant="outline"
-          // onClick={() => gotoApiKeySetting()}
+          onClick={() => gotoSettingManager()}
           className={cn(
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
