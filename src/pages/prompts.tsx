@@ -15,6 +15,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
+import { cn } from "~utils/commons";
 
 const PromptManager = () => {
   const [prompts, setPrompts] = useState([]);
@@ -140,7 +141,12 @@ const PromptManager = () => {
       <div className="w-64 border-r bg-white p-4 overflow-y-auto">
         <div className="mb-4">
           <Button
-            className="w-full"
+            className={cn(
+              "px-4 py-2 rounded-full border-0 justify-start",
+              "cursor-pointer",
+              "transition-colors duration-300",
+              "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center w-full",
+            )}
             onClick={() => {
               handleCancel();
               setSelectedPrompt(null);
@@ -180,8 +186,8 @@ const PromptManager = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4 overflow-y-auto">
-        <Card>
+      <div className="flex-1 p-4 overflow-y-auto h-full">
+        <Card className="h-full">
           <CardHeader>
             <CardTitle>
               {isEditing ? "Edit Prompt" : "Create New Prompt"}
@@ -213,6 +219,7 @@ const PromptManager = () => {
                     })
                   }
                   rows={8}
+                  className="w-full"
                 />
               </div>
               {error && (
@@ -222,7 +229,15 @@ const PromptManager = () => {
                 </Alert>
               )}
               <div className="flex gap-2">
-                <Button type="submit">
+                <Button
+                  type="submit"
+                  className={cn(
+                    "px-4 py-2 rounded-full border-0 justify-start",
+                    "cursor-pointer",
+                    "transition-colors duration-300",
+                    "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
+                  )}
+                >
                   {isEditing ? (
                     <>
                       <Save className="w-4 h-4 mr-2" /> Update
@@ -239,6 +254,12 @@ const PromptManager = () => {
                   <Button
                     type="button"
                     variant="outline"
+                    className={cn(
+                      "px-4 py-2 rounded-full border-0 justify-start",
+                      "cursor-pointer",
+                      "transition-colors duration-300",
+                      "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
+                    )}
                     onClick={handleCancel}
                   >
                     <X className="w-4 h-4 mr-2" /> Cancel
@@ -261,10 +282,16 @@ const PromptManager = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setShowDeleteDialog(false)}>
+            <AlertDialogCancel
+              onClick={() => setShowDeleteDialog(false)}
+              className="rounded-full"
+            >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="text-white rounded-full hover:bg-gray-100 hover:text-black"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

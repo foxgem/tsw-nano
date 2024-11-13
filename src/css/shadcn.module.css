@@ -31,7 +31,7 @@
 }
 
 .textareaComponent:focus {
-  @apply ring-2 ring-blue-500 outline-none;
+  @apply ring-2 ring-blue-500 outline-none border-0;
 }
 
 .copyButton {
