@@ -90,6 +90,7 @@ export const summarise = async (text: string, messageElement: HTMLElement) => {
     const summary = await summarizer.summarize(text);
     root.render(React.createElement(StreamMessage, { outputString: summary }));
   } catch (e) {
+    console.error(e);
     root.render(
       React.createElement(StreamMessage, { outputString: e.message }),
     );
@@ -111,6 +112,7 @@ export const summariseLongContext = async (text: string) => {
     const summary = await summarizer.summarize(text);
     return summary;
   } catch (e) {
+    console.error(e);
     return e.message;
   }
 };
@@ -119,8 +121,12 @@ export const suggestNext = async (text: string) => {
   try {
     await checkNanoAvailability();
     const nano = await window.ai.languageModel.create({
-      systemPrompt:
-        "You are an inputting helper to complete the whole sentence starting with the provided words. The result must start with the provided words. Return only one result to complete the sentence without additional information.",
+      systemPrompt: `Task: Generate relevant and diverse continuations for text, generate only one of possible continuations. Your responses should be:
+Laconic: Only the words after the input text. Only one sentence.
+Relevant: The generated content should be highly relevant to the input text.
+Unique: Provide only the most like continuations.
+Natural and fluent: The generated text should be grammatically correct and read naturally.
+Context-aware: Understand the context and generate responses that are appropriate.`,
       initialPrompts: [
         {
           role: "assistant",
