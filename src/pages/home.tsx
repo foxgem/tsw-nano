@@ -1,4 +1,4 @@
-import { BotMessageSquare, NotepadText, Settings2 } from "lucide-react";
+import { BotMessageSquare, SquareSlash, Bolt } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
@@ -17,12 +17,12 @@ function MainPage() {
     window.close();
   };
 
-  const gotoPromptManager = () => {
-    navigate("/prompts", {});
+  const gotoSlashCommands = () => {
+    navigate("/slash-commands", {});
   };
 
-  const gotoSettingManager = () => {
-    // navigate("/settings", {});
+  const gotoQuickActions = () => {
+    navigate("/quick-actions", {});
   };
 
   return (
@@ -44,7 +44,7 @@ function MainPage() {
         </Button>
         <Button
           variant="outline"
-          onClick={() => gotoPromptManager()}
+          onClick={() => gotoSlashCommands()}
           className={cn(
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
@@ -52,12 +52,12 @@ function MainPage() {
             "bg-accent  hover:bg-primary hover:text-white justify-center",
           )}
         >
-          <NotepadText className="mr-2" />
-          Prompts
+          <SquareSlash className="mr-2" />
+          Slash Commands
         </Button>
         <Button
           variant="outline"
-          onClick={() => gotoSettingManager()}
+          onClick={() => gotoQuickActions()}
           className={cn(
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
@@ -65,8 +65,8 @@ function MainPage() {
             "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
           )}
         >
-          <Settings2 className="mr-2" />
-          Settings
+          <Bolt className="mr-2" />
+          Quick Actions
         </Button>
       </nav>
       <Footer className="mt-auto" />

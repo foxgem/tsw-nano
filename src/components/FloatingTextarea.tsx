@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import type React from "react";
 import textareaStyles from "~/css/floating.module.css";
 import { List, MessageCircle, MessageSquareText, Plus } from "lucide-react";
 import chatStyles from "~/css/chatui.module.css";

@@ -1,15 +1,14 @@
 import { Route, MemoryRouter as Router, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
 import MainPage from "./pages/home";
+import CommandManager from "./pages/commands";
 
 import "./css/extention.css";
-import PromptsManager from "~pages/prompts";
 import { useLocation } from "react-router-dom";
 
 function ContentWrapper() {
   const location = useLocation();
 
-  // Apply different classes based on the route
   const containerClass =
     location.pathname === "/" ? "w-[350px]" : "w-[800px] h-[600px]";
 
@@ -17,7 +16,14 @@ function ContentWrapper() {
     <div className={containerClass}>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/prompts" element={<PromptsManager />} />
+        <Route
+          path="/slash-commands"
+          element={<CommandManager category="slash-commands" />}
+        />
+        <Route
+          path="/quick-actions"
+          element={<CommandManager category="quick-actions" />}
+        />
       </Routes>
     </div>
   );
