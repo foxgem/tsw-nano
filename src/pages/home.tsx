@@ -36,7 +36,7 @@ function MainPage() {
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
-            "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
+            "bg-accent hover:bg-primary hover:text-white dark:text-white",
           )}
         >
           <BotMessageSquare className="mr-2" />
@@ -49,7 +49,7 @@ function MainPage() {
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
-            "bg-accent  hover:bg-primary hover:text-white justify-center",
+            "bg-accent  hover:bg-primary hover:text-white",
           )}
         >
           <SquareSlash className="mr-2" />
@@ -62,7 +62,7 @@ function MainPage() {
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
-            "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
+            "bg-accent hover:bg-primary hover:text-white dark:text-white",
           )}
         >
           <Bolt className="mr-2" />
