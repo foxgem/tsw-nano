@@ -1,8 +1,33 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
+import type { NanoApi } from "./types";
 
-type LinePrinter = (text: string) => void;
+const checkNanoAvailability = async (api: NanoApi) => {
+  let modelFactory: any;
+  switch (api) {
+    case "language-model":
+      modelFactory = window.ai.languageModel;
+      break;
+    case "summarizer":
+      modelFactory = window.ai.summarizer;
+      break;
+    case "writer":
+      modelFactory = window.ai.writer;
+      break;
+    case "rewriter":
+      modelFactory = window.ai.rewriter;
+      break;
+  }
+
+  const { available } = await modelFactory.capabilities();
+
+  console.log(available);
+
+  if (available !== "readily") {
+    throw new Error("Nano is not available");
+  }
+};
 
 const pageRagPrompt = (context: string) => {
   return `
@@ -14,79 +39,14 @@ const pageRagPrompt = (context: string) => {
   `;
 };
 
-const checkNanoAvailability = async () => {
-  const { available } = await window.ai.languageModel.capabilities();
-  if (available !== "readily") {
-    throw new Error("Nano model is not available");
-  }
-};
-
-const genTextFunction = async (
-  prompt: string,
-  system: string,
-  messageElement: HTMLElement,
-) => {
-  const root = createRoot(messageElement);
-
-  try {
-    await checkNanoAvailability();
-    const nano = await window.ai.languageModel.create({
-      systemPrompt: system,
-    });
-    const result = await nano.prompt(prompt);
-    root.render(React.createElement(StreamMessage, { outputString: result }));
-  } catch (e) {
-    root.render(
-      React.createElement(StreamMessage, { outputString: e.message }),
-    );
-  }
-};
-
-const genChatFunction = async (
-  messages: Array<{ role: "system"; content: string }>,
-  messageElement: HTMLElement,
-) => {
-  const root = createRoot(messageElement);
-
-  try {
-    const root = createRoot(messageElement);
-    // const google = createGoogleGenerativeAI({ apiKey });
-    // const { textStream } = await streamText({
-    //   model: google("gemini-1.5-flash"),
-    //   messages,
-    // });
-
-    // const results: string[] = [];
-    // for await (const text of textStream) {
-    //   results.push(text);
-    //   root.render(
-    //     React.createElement(StreamMessage, { outputString: results.join("") }),
-    //   );
-    // }
-  } catch (e) {
-    root.render(
-      React.createElement(StreamMessage, { outputString: e.message }),
-    );
-  }
-};
-
 export const summarise = async (text: string, messageElement: HTMLElement) => {
   const root = createRoot(messageElement);
-  const canSummarize = await window.ai.summarizer.capabilities();
-
-  if (canSummarize.available === "no") {
-    root.render(
-      React.createElement(StreamMessage, {
-        outputString: "No summarizer model available",
-      }),
-    );
-    return;
-  }
-  const summarizer = await window.ai.summarizer.create({
-    type: "key-points",
-    length: "short",
-  });
   try {
+    await checkNanoAvailability("summarizer");
+    const summarizer = await window.ai.summarizer.create({
+      type: "key-points",
+      length: "short",
+    });
     const summary = await summarizer.summarize(text);
     root.render(React.createElement(StreamMessage, { outputString: summary }));
   } catch (e) {
@@ -98,17 +58,12 @@ export const summarise = async (text: string, messageElement: HTMLElement) => {
 };
 
 export const summariseLongContext = async (text: string) => {
-  const canSummarize = await window.ai.summarizer.capabilities();
-  if (canSummarize.available === "no") {
-    return;
-  }
-
-  const summarizer = await window.ai.summarizer.create({
-    format: "plain-text",
-    length: "long",
-  });
-
   try {
+    await checkNanoAvailability("summarizer");
+    const summarizer = await window.ai.summarizer.create({
+      format: "plain-text",
+      length: "long",
+    });
     const summary = await summarizer.summarize(text);
     return summary;
   } catch (e) {
@@ -118,9 +73,10 @@ export const summariseLongContext = async (text: string) => {
 };
 
 export const suggestNext = async (text: string) => {
+  let session: AILanguageModel | undefined;
   try {
-    await checkNanoAvailability();
-    const nano = await window.ai.languageModel.create({
+    await checkNanoAvailability("language-model");
+    session = await window.ai.languageModel.create({
       systemPrompt: `Task: Generate relevant and diverse continuations for text, generate only one of possible continuations. Your responses should be:
 Laconic: Only the words after the input text. Only one sentence.
 Relevant: The generated content should be highly relevant to the input text.
@@ -134,25 +90,21 @@ Context-aware: Understand the context and generate responses that are appropriat
         },
       ],
     });
-    const result = await nano.prompt(text);
+    const result = await session.prompt(text);
     return result;
   } catch (e) {
     return e.message;
+  } finally {
+    if (session) {
+      session.destroy();
+    }
   }
-};
-
-export const pageRag = (
-  message: string,
-  context: string,
-  linePrinter: LinePrinter,
-) => {
-  // genAIFunction(pageRagPrompt(message, context));
 };
 
 export const chatWithPage = async (pageText: string, userMessage: string) => {
   let session: AILanguageModel | undefined;
   try {
-    await checkNanoAvailability();
+    await checkNanoAvailability("language-model");
     const session = await window.ai.languageModel.create({
       systemPrompt: pageRagPrompt(pageText),
     });

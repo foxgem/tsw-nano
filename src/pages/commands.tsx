@@ -23,50 +23,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import type {
+  Command,
+  LMOptions,
+  NanoApi,
+  RewriterOptions,
+  SummarizerOptions,
+  WriterOptions,
+} from "~utils/types";
 
 export interface CommandManagerProps {
   category: "slash-commands" | "quick-actions";
 }
-
-export type NanoCategory =
-  | "language-model"
-  | "summarizer"
-  | "writer"
-  | "rewriter";
-
-export type LMOptions = {
-  topK?: number;
-  temperature?: number;
-  systemPrompt?: string;
-  prompt: string;
-};
-
-export type SummarizerOptions = {
-  sharedContext?: string;
-  type?: "tl;dr" | "key-points" | "teaser" | "headline";
-  format?: "plain-text" | "markdown";
-  length?: "short" | "medium" | "long";
-};
-
-export type WriterOptions = {
-  sharedContext?: string;
-  tone?: "formal" | "neutral" | "casual";
-  format?: "plain-text" | "markdown";
-  length?: "short" | "medium" | "long";
-};
-
-export type RewriterOptions = {
-  sharedContext?: string;
-  tone?: "as-is" | "more-formal" | "more-casual";
-  format?: "as-is" | "plain-text" | "markdown";
-  length?: "as-is" | "shorter" | "longer";
-};
-
-export type Command = {
-  name: string;
-  nano: NanoCategory;
-  options: LMOptions | SummarizerOptions | WriterOptions | RewriterOptions;
-};
 
 const emptyCommand: Command = {
   name: "",
@@ -305,7 +273,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                 </label>
                 <Select
                   value={currentCommand?.nano}
-                  onValueChange={(value: NanoCategory) => {
+                  onValueChange={(value: NanoApi) => {
                     setCurrentCommand({
                       ...currentCommand,
                       nano: value,
