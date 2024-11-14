@@ -22,11 +22,11 @@ import {
 import { useState } from "react";
 import { createNanoModel, executeNanoModel } from "~utils/ai";
 
-interface CommandTestProps {
+interface CommandTestTabProps {
   command: Command;
 }
 
-const CommandTest: React.FC<CommandTestProps> = ({ command }) => {
+const CommandTestTab: React.FC<CommandTestTabProps> = ({ command }) => {
   const [testContent, setTestContent] = useState("");
   const [output, setOutput] = useState("");
   const handleTextClick = async () => {
@@ -165,4 +165,4 @@ const CommandTest: React.FC<CommandTestProps> = ({ command }) => {
   );
 };
 
-export default CommandTest;
+export default CommandTestTab;

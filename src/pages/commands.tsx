@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
-import CommandTest from "~components/CommandTest";
+import CommandTestTab from "~components/CommandTestTab";
 import { Tabs, TabsContent, TabsList } from "~components/ui/tabs";
 import { cn } from "~utils/commons";
 import {
@@ -914,7 +914,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
           </TabsContent>
 
           <TabsContent value="test" className="h-full">
-            <CommandTest command={currentCommand} />
+            <CommandTestTab command={currentCommand} />
           </TabsContent>
         </Tabs>
       </div>
