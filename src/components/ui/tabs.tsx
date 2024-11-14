@@ -2,8 +2,7 @@
 
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import * as React from "react";
-
-import { cn } from "@/lib/utils";
+import { cn } from "~utils/commons";
 
 const Tabs = TabsPrimitive.Root;
 
@@ -44,7 +43,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className,
     )}
     {...props}
