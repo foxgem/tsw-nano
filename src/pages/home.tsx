@@ -1,4 +1,4 @@
-import { BotMessageSquare, SquareSlash, Bolt } from "lucide-react";
+import { Bolt, BotMessageSquare, SquareSlash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";

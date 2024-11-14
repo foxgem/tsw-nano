@@ -1,7 +1,7 @@
 import { Route, MemoryRouter as Router, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
-import MainPage from "./pages/home";
 import CommandManager from "./pages/commands";
+import MainPage from "./pages/home";
 
 import "./css/extention.css";
 import { useLocation } from "react-router-dom";
