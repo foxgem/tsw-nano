@@ -98,18 +98,18 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
   const [commandToDelete, setCommandToDelete] = useState<Command | null>(null);
 
   useEffect(() => {
-    const loadCommands = () => {
-      const savedCommands = localStorage.getItem(category);
-      if (savedCommands) {
-        setCommands(JSON.parse(savedCommands));
+    const loadCommands = async () => {
+      const result = await chrome.storage.local.get(category);
+      if (result[category]) {
+        setCommands(result[category]);
       }
     };
     loadCommands();
   }, [category]);
 
   const saveToLocalStorage = useMemo(
-    () => (updatedCommands: Array<Command>) => {
-      localStorage.setItem(category, JSON.stringify(updatedCommands));
+    () => async (updatedCommands: Array<Command>) => {
+      await chrome.storage.local.set({ [category]: updatedCommands });
       setCommands(updatedCommands);
     },
     [category],

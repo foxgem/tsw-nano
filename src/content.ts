@@ -23,7 +23,7 @@ function attachNanoInputingAmplifier() {
   let suggestContainer: HTMLDivElement | null = null;
   let root = null;
 
-  document.addEventListener("keypress", (e) => {
+  document.addEventListener("keyup", (e) => {
     if (
       !(
         e.target instanceof HTMLInputElement ||
@@ -34,8 +34,7 @@ function attachNanoInputingAmplifier() {
     }
 
     const target = e.target as HTMLInputElement | HTMLTextAreaElement;
-    if (target.value === "@nano") {
-      console.log(target.value, "---");
+    if (target.value === "/") {
       suggestContainer = document.createElement("div");
       suggestContainer.id = "tsw-suggest-container";
 
@@ -69,6 +68,7 @@ function attachNanoInputingAmplifier() {
               root = null;
             }
           },
+          category: "slash-commands",
         }),
       );
     } else {
