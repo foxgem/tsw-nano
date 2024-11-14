@@ -63,28 +63,28 @@ const emptyCommand: Command = {
 
 const defaultOptionsMap = {
   "language-model": {
-    topK: 1,
-    temperature: 0.7,
+    topK: 3,
+    temperature: 1,
     systemPrompt: "",
     prompt: "",
   } as LMOptions,
   summarizer: {
     sharedContext: "",
     type: "tl;dr",
-    format: "plain-text",
+    format: "markdown",
     length: "short",
   } as SummarizerOptions,
   writer: {
     sharedContext: "",
     tone: "neutral",
-    format: "plain-text",
-    length: "medium",
+    format: "markdown",
+    length: "short",
   } as WriterOptions,
   rewriter: {
     sharedContext: "",
     tone: "as-is",
-    format: "as-is",
-    length: "as-is",
+    format: "markdown",
+    length: "shorter",
   } as RewriterOptions,
 };
 
@@ -124,6 +124,17 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
       return "Name must be at least 3 characters long";
     if (command.name.length > 50) return "Name must be less than 50 characters";
     if (command.name.includes(" ")) return "Name must not contain spaces.";
+
+    if (command.nano === "language-model") {
+      const { topK, temperature } = command.options as LMOptions;
+      if (topK < 1 || topK > 8) return "Top-K must be between 1 and 8";
+      if (temperature < 0.1)
+        return "Temperature must be greater than or equal to 0.1";
+      if ((topK && !temperature) || (!topK && temperature)) {
+        return "Both Top-K and Temperature must be provided if one is set";
+      }
+    }
+
     return "";
   };
 
@@ -378,6 +389,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                           <Input
                             id="topK"
                             type="number"
+                            max="8"
                             value={
                               (currentCommand.options as LMOptions).topK || 1
                             }

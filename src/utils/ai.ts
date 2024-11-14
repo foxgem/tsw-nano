@@ -12,17 +12,17 @@ const checkNanoAvailability = async (api: NanoApi) => {
     case "summarizer":
       modelFactory = window.ai.summarizer;
       break;
-    case "writer":
-      modelFactory = window.ai.writer;
-      break;
-    case "rewriter":
-      modelFactory = window.ai.rewriter;
-      break;
+    default:
+      throw new Error("Invalid API");
+    // case "writer":
+    //   modelFactory = window.ai.writer;
+    //   break;
+    // case "rewriter":
+    //   modelFactory = window.ai.rewriter;
+    //   break;
   }
 
   const { available } = await modelFactory.capabilities();
-
-  console.log(available);
 
   if (available !== "readily") {
     throw new Error("Nano is not available");
