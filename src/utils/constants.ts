@@ -21,7 +21,7 @@ export const TABTRIGGER_STYLES = cn(
 );
 
 export const NANOTYPE_OPTIONS = [
-  { value: "language-model", label: "Language Model" },
+  { value: "languageModel", label: "Language Model" },
   { value: "summarizer", label: "Summarizer" },
   // { value: "writer", label: "Writer" },
   // { value: "rewriter", label: "Rewriter" },

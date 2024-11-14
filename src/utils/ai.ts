@@ -1,33 +1,34 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
-import type { NanoApi } from "./types";
+import type { Command, NanoApi } from "./types";
 
 const checkNanoAvailability = async (api: NanoApi) => {
-  let modelFactory: any;
-  switch (api) {
-    case "language-model":
-      modelFactory = window.ai.languageModel;
-      break;
-    case "summarizer":
-      modelFactory = window.ai.summarizer;
-      break;
-    default:
-      throw new Error("Invalid API");
-    // case "writer":
-    //   modelFactory = window.ai.writer;
-    //   break;
-    // case "rewriter":
-    //   modelFactory = window.ai.rewriter;
-    //   break;
-  }
-
-  const { available } = await modelFactory.capabilities();
-
+  const { available } = await window.ai[api].capabilities();
   if (available !== "readily") {
     throw new Error("Nano is not available");
   }
 };
+
+export async function createNanoModel(command: Command) {
+  await checkNanoAvailability(command.nano);
+  return window.ai[command.nano].create(command.options as any);
+}
+
+export async function executeNanoModel(
+  nanoModel: AILanguageModel | AISummarizer | AIWriter | AIRewriter,
+  params: string,
+) {
+  if ("prompt" in nanoModel) {
+    return await nanoModel.prompt(params);
+  }
+
+  if ("summarize" in nanoModel) {
+    return await nanoModel.summarize(params);
+  }
+
+  return "unsupported";
+}
 
 const pageRagPrompt = (context: string) => {
   return `
@@ -75,7 +76,7 @@ export const summariseLongContext = async (text: string) => {
 export const suggestNext = async (text: string) => {
   let session: AILanguageModel | undefined;
   try {
-    await checkNanoAvailability("language-model");
+    await checkNanoAvailability("languageModel");
     session = await window.ai.languageModel.create({
       systemPrompt: `Task: Generate relevant and diverse continuations for text, generate only one of possible continuations. Your responses should be:
 Laconic: Only the words after the input text. Only one sentence.
@@ -104,7 +105,7 @@ Context-aware: Understand the context and generate responses that are appropriat
 export const chatWithPage = async (pageText: string, userMessage: string) => {
   let session: AILanguageModel | undefined;
   try {
-    await checkNanoAvailability("language-model");
+    await checkNanoAvailability("languageModel");
     const session = await window.ai.languageModel.create({
       systemPrompt: pageRagPrompt(pageText),
     });

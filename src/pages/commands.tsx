@@ -52,7 +52,7 @@ export interface CommandManagerProps {
 
 const emptyCommand: Command = {
   name: "",
-  nano: "language-model",
+  nano: "languageModel",
   options: {
     topK: 1,
     temperature: 0.7,
@@ -62,7 +62,7 @@ const emptyCommand: Command = {
 };
 
 const defaultOptionsMap = {
-  "language-model": {
+  languageModel: {
     topK: 3,
     temperature: 1,
     systemPrompt: "",
@@ -96,7 +96,6 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
   const [selectedCommand, setSelectedCommand] = useState<Command | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [commandToDelete, setCommandToDelete] = useState<Command | null>(null);
-  const [categoryName, setCategoryName] = useState<string>("");
 
   useEffect(() => {
     const loadCommands = () => {
@@ -106,8 +105,6 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
       }
     };
     loadCommands();
-    const name = category === "slash-commands" ? "Command" : "Action";
-    setCategoryName(name);
   }, [category]);
 
   const saveToLocalStorage = useMemo(
@@ -125,7 +122,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
     if (command.name.length > 50) return "Name must be less than 50 characters";
     if (command.name.includes(" ")) return "Name must not contain spaces.";
 
-    if (command.nano === "language-model") {
+    if (command.nano === "languageModel") {
       const { topK, temperature } = command.options as LMOptions;
       if (topK < 1 || topK > 8) return "Top-K must be between 1 and 8";
       if (temperature < 0.1)
@@ -155,7 +152,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
     );
 
     if (isExists) {
-      setError(`A ${categoryName} with this name already exists`);
+      setError("Already exists");
       return;
     }
 
@@ -226,7 +223,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
               setSelectedCommand(null);
             }}
           >
-            <Plus className="w-4 h-4 mr-2" /> New {categoryName}
+            <Plus className="w-4 h-4 mr-2" /> New
           </Button>
         </div>
         <div className="space-y-2">
@@ -292,7 +289,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                       </label>
                       <Input
                         id="commandName"
-                        placeholder={`Enter ${categoryName.toLocaleLowerCase()} name`}
+                        placeholder={"Enter name"}
                         value={currentCommand?.name || ""}
                         onChange={(e) =>
                           setCurrentCommand({
@@ -331,7 +328,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                     </div>
                   </div>
                   {/* Dynamic Options Based on Type */}
-                  {currentCommand?.nano === "language-model" && (
+                  {currentCommand?.nano === "languageModel" && (
                     <div className="space-y-4">
                       <div className="w-full">
                         <label
@@ -917,7 +914,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
           </TabsContent>
 
           <TabsContent value="test" className="h-full">
-            <CommandTest command={currentCommand} categoryName={categoryName} />
+            <CommandTest command={currentCommand} />
           </TabsContent>
         </Tabs>
       </div>
@@ -928,8 +925,8 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              {categoryName.toLocaleLowerCase()} "{commandToDelete?.name}".
+              This action cannot be undone. This will permanently delete the "
+              {commandToDelete?.name}".
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

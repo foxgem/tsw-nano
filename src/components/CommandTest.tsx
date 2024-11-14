@@ -20,29 +20,27 @@ import {
   WRITER_TONE_OPTIONS,
 } from "~utils/constants";
 import { useState } from "react";
+import { createNanoModel, executeNanoModel } from "~utils/ai";
+
 interface CommandTestProps {
   command: Command;
-  categoryName: string;
 }
-const CommandTest: React.FC<CommandTestProps> = ({ command, categoryName }) => {
+
+const CommandTest: React.FC<CommandTestProps> = ({ command }) => {
   const [testContent, setTestContent] = useState("");
   const [output, setOutput] = useState("");
-  const handleTextClick = () => {
-    console.log("test", testContent);
-    setOutput("test output");
+  const handleTextClick = async () => {
+    const nanoModel = await createNanoModel(command);
+    setOutput(await executeNanoModel(nanoModel, testContent));
   };
+
   return (
     <Card className="h-full pt-4">
       <CardContent>
         <div className="grid  grid-cols-2 gap-2 border rounded p-4 text-sm font-medium">
-          <div>
-            {categoryName} Name: {command.name}
-          </div>
-          <div>
-            Type:
-            {findLabelByValue(NANOTYPE_OPTIONS, command.nano)}
-          </div>
-          {command.nano === "language-model" && (
+          <div>{command.name}</div>
+          <div>{findLabelByValue(NANOTYPE_OPTIONS, command.nano)}</div>
+          {command.nano === "languageModel" && (
             <>
               <div>
                 System Prompt: {(command.options as LMOptions).systemPrompt}
@@ -166,4 +164,5 @@ const CommandTest: React.FC<CommandTestProps> = ({ command, categoryName }) => {
     </Card>
   );
 };
+
 export default CommandTest;

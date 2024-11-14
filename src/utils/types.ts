@@ -1,4 +1,4 @@
-export type NanoApi = "language-model" | "summarizer" | "writer" | "rewriter";
+export type NanoApi = "languageModel" | "summarizer" | "writer" | "rewriter";
 
 export type LMOptions = {
   topK?: number;
