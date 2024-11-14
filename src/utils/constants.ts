@@ -45,7 +45,7 @@ export const WRITER_TONE_OPTIONS = [
   { value: "casual", label: "Casual" },
 ];
 
-export const WRITER_LENGTH_OPTIONS = [
+export const LENGTH_OPTIONS = [
   { value: "short", label: "Short" },
   { value: "medium", label: "Medium" },
   { value: "long", label: "Long" },

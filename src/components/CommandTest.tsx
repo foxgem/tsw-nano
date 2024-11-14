@@ -16,7 +16,7 @@ import {
   REWRITER_LENGTH_OPTIONS,
   REWRITER_TONE_OPTIONS,
   SUMMARIZER_TYPE_OPTIONS,
-  WRITER_LENGTH_OPTIONS,
+  LENGTH_OPTIONS,
   WRITER_TONE_OPTIONS,
 } from "~utils/constants";
 import { useState } from "react";
@@ -100,7 +100,7 @@ const CommandTest: React.FC<CommandTestProps> = ({ command, categoryName }) => {
               <div>
                 Length:
                 {findLabelByValue(
-                  WRITER_LENGTH_OPTIONS,
+                  LENGTH_OPTIONS,
                   (command.options as WriterOptions | RewriterOptions).length,
                 )}
               </div>

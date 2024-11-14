@@ -34,7 +34,7 @@ import {
   REWRITER_TONE_OPTIONS,
   SUMMARIZER_TYPE_OPTIONS,
   TABTRIGGER_STYLES,
-  WRITER_LENGTH_OPTIONS,
+  LENGTH_OPTIONS,
   WRITER_TONE_OPTIONS,
 } from "~utils/constants";
 import type {
@@ -464,7 +464,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                           }
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-3 gap-4">
                         <div>
                           <label
                             className="text-sm font-medium"
@@ -529,6 +529,43 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                             </SelectTrigger>
                             <SelectContent>
                               {FORMAT_OPTIONS.map((option) => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label
+                            className="text-sm font-medium"
+                            htmlFor="summarizerLength"
+                          >
+                            Length
+                          </label>
+                          <Select
+                            value={
+                              (currentCommand.options as SummarizerOptions)
+                                .length as string
+                            }
+                            onValueChange={(value) =>
+                              setCurrentCommand({
+                                ...currentCommand,
+                                options: {
+                                  ...(currentCommand.options as SummarizerOptions),
+                                  length: value as SummarizerOptions["length"],
+                                },
+                              })
+                            }
+                          >
+                            <SelectTrigger id="summarizerLength">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {LENGTH_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
                                   value={option.value}
@@ -672,7 +709,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              {WRITER_LENGTH_OPTIONS.map((option) => (
+                              {LENGTH_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
                                   value={option.value}
