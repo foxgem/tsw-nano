@@ -1,6 +1,5 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import FloatingTextarea from "~components/FloatingTextarea";
 import SuggestList from "~components/SuggestList";
 import { chattingHandler, summarizeSelected } from "./handlers";
 
@@ -89,32 +88,6 @@ function attachNanoInputingAmplifier() {
 
 attachNanoInputingAmplifier();
 
-function createFloatingInput() {
-  const container = document.createElement("div");
-  container.id = "floating-textarea";
-
-  const root = createRoot(container);
-  root.render(
-    React.createElement(FloatingTextarea, {
-      onSubmit: (value: string) => {
-        console.log("Submit:", value);
-      },
-      onChat: () => {
-        chattingHandler("tsw-toggle-panel");
-      },
-      onSummary: () => {
-        summarizeSelected("tsw-toggle-panel", document.body.innerText);
-      },
-    }),
-  );
-
-  document.body.appendChild(container);
-
-  return container;
-}
-
-createFloatingInput();
-
 function createFloatingTogglePanel() {
   const panel = document.createElement("div");
   panel.id = "tsw-toggle-panel";
@@ -149,5 +122,13 @@ chrome.runtime.onMessage.addListener((request) => {
     case "openChat":
       chattingHandler("tsw-toggle-panel");
       break;
+  }
+});
+
+document.addEventListener("keydown", (e: KeyboardEvent) => {
+  // cmd + @
+  if (e.metaKey && e.shiftKey && e.key === "2") {
+    e.preventDefault();
+    chattingHandler("tsw-toggle-panel");
   }
 });
