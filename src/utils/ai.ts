@@ -43,6 +43,11 @@ const pageRagPrompt = (context: string) => {
 export const summarise = async (text: string, messageElement: HTMLElement) => {
   const root = createRoot(messageElement);
   try {
+    if (text.length > 4096) {
+      console.log(text.length);
+      throw new Error("Text is too long for summarization");
+    }
+
     await checkNanoAvailability("summarizer");
     const summarizer = await window.ai.summarizer.create({
       sharedContext:
@@ -50,6 +55,7 @@ export const summarise = async (text: string, messageElement: HTMLElement) => {
       type: "key-points",
       length: "short",
     });
+
     const summary = await summarizer.summarize(text);
     root.render(React.createElement(StreamMessage, { outputString: summary }));
   } catch (e) {
