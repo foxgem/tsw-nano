@@ -1,7 +1,5 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import SuggestList from "~components/SuggestList";
 import { chattingHandler, summarizeSelected } from "./handlers";
+import { createInputAssistant } from "~utils/ai";
 
 export const iconArray = [
   {
@@ -17,76 +15,6 @@ export const iconArray = [
     },
   },
 ];
-
-function attachNanoInputingAmplifier() {
-  let suggestContainer: HTMLDivElement | null = null;
-  let root = null;
-
-  document.addEventListener("keyup", (e) => {
-    if (
-      !(
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      )
-    ) {
-      return;
-    }
-
-    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
-    if (target.value === "/") {
-      suggestContainer = document.createElement("div");
-      suggestContainer.id = "tsw-suggest-container";
-
-      target.parentElement?.appendChild(suggestContainer);
-      const rect = target.getBoundingClientRect();
-      const parentRect = target.parentElement?.getBoundingClientRect() || rect;
-
-      suggestContainer.style.position = "absolute";
-      suggestContainer.style.left = "20px";
-      if (target.id === "tsw-chat-textarea") {
-        setTimeout(() => {
-          const suggestionsList = document.getElementById(
-            "tsw-suggestionsList",
-          );
-          const listHeight = suggestionsList?.offsetHeight || 0;
-          if (suggestContainer) {
-            suggestContainer.style.bottom = `${listHeight + 40}px`;
-          }
-        }, 0);
-      } else {
-        suggestContainer.style.top = `${parentRect.height - 50}px`;
-      }
-      root = createRoot(suggestContainer);
-
-      root.render(
-        React.createElement(SuggestList, {
-          onSelect: (value: string) => {
-            target.value = value;
-            if (suggestContainer) {
-              suggestContainer.remove();
-              root = null;
-            }
-          },
-          category: "slash-commands",
-        }),
-      );
-    } else {
-      if (suggestContainer) {
-        suggestContainer.remove();
-        root = null;
-      }
-    }
-  });
-
-  document.addEventListener("click", (e) => {
-    if (suggestContainer && !suggestContainer.contains(e.target as Node)) {
-      suggestContainer.remove();
-      suggestContainer = null;
-    }
-  });
-}
-
-attachNanoInputingAmplifier();
 
 function createFloatingTogglePanel() {
   const panel = document.createElement("div");
@@ -131,4 +59,24 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
     e.preventDefault();
     chattingHandler("tsw-toggle-panel");
   }
+});
+
+createInputAssistant().then((assistant) => {
+  document.addEventListener("keyup", async (e) => {
+    if (
+      !(
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
+    ) {
+      return;
+    }
+
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+    if (target.value.split(" ").length <= 3) {
+      return;
+    }
+
+    target.value += await assistant.prompt(target.value);
+  });
 });

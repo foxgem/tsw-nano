@@ -73,33 +73,23 @@ export const summariseLongContext = async (text: string) => {
   }
 };
 
-export const suggestNext = async (text: string) => {
-  let session: AILanguageModel | undefined;
-  try {
-    await checkNanoAvailability("languageModel");
-    session = await window.ai.languageModel.create({
-      systemPrompt: `Task: Generate relevant and diverse continuations for text, generate only one of possible continuations. Your responses should be:
-Laconic: Only the words after the input text. Only one sentence.
-Relevant: The generated content should be highly relevant to the input text.
-Unique: Provide only the most like continuations.
-Natural and fluent: The generated text should be grammatically correct and read naturally.
-Context-aware: Understand the context and generate responses that are appropriate.`,
-      initialPrompts: [
-        {
-          role: "assistant",
-          content: "Try to undesrand the user's intention well.",
-        },
-      ],
-    });
-    const result = await session.prompt(text);
-    return result;
-  } catch (e) {
-    return e.message;
-  } finally {
-    if (session) {
-      session.destroy();
-    }
-  }
+export const createInputAssistant = async () => {
+  await checkNanoAvailability("languageModel");
+  return await window.ai.languageModel.create({
+    systemPrompt: `Task: Generate relevant and diverse continuations for text, generate only one of possible continuations.Your responses should be:
+        Laconic: Only the words after the input text. Only one sentence.
+        Relevant: The generated content should be highly relevant to the input text.
+        Unique: Provide only the most like continuations.
+        Natural and fluent: The generated text should be grammatically correct and read naturally.
+        Context-aware: Understand the context and generate responses that are appropriate.
+    `,
+    initialPrompts: [
+      {
+        role: "assistant",
+        content: "Predict the user's next inputting based on the given text.",
+      },
+    ],
+  });
 };
 
 export const chatWithPage = async (pageText: string, userMessage: string) => {
