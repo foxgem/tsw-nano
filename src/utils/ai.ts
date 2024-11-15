@@ -45,13 +45,14 @@ export const summarise = async (text: string, messageElement: HTMLElement) => {
   try {
     await checkNanoAvailability("summarizer");
     const summarizer = await window.ai.summarizer.create({
+      sharedContext:
+        "Keep the summary concise and relevant to the text without providing unnecessary information and explanations.",
       type: "key-points",
       length: "short",
     });
     const summary = await summarizer.summarize(text);
     root.render(React.createElement(StreamMessage, { outputString: summary }));
   } catch (e) {
-    console.error(e);
     root.render(
       React.createElement(StreamMessage, { outputString: e.message }),
     );

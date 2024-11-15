@@ -1,11 +1,11 @@
-import { chattingHandler, summarizeSelected } from "./handlers";
+import { chattingHandler, cleanPageText, summarizeSelected } from "./handlers";
 import { createInputAssistant } from "~utils/ai";
 
 export const iconArray = [
   {
     name: "Summary",
     action: () => {
-      summarizeSelected("tsw-toggle-panel", document.body.innerText);
+      summarizeSelected("tsw-toggle-panel", cleanPageText());
     },
   },
   {
