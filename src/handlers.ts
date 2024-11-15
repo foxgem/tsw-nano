@@ -25,7 +25,7 @@ function withOutputPanel(
       title: title,
       placeHolder: placeHolder,
       onRender: () => {
-        const closeButton = document.querySelector("#tsw-close-right-part");
+        const closeButton = document.querySelector("#tsw-close-panel");
         if (closeButton) {
           closeButton.addEventListener("click", () => {
             panel.style.display = "none";
@@ -78,7 +78,7 @@ export function chattingHandler(outputElm: string) {
     React.createElement(TSWChattingPanel, {
       pageText: document.body.innerText,
       onRender: () => {
-        const closeButton = document.querySelector("#tsw-close-right-part");
+        const closeButton = document.querySelector("#tsw-close-panel");
         if (closeButton) {
           closeButton.addEventListener("click", () => {
             panel.style.display = "none";
