@@ -22,6 +22,7 @@
   font-family: inherit;
   font-size: 14px;
   background-color: #ffffff;
+  color: black;
 }
 
 .tswFloatingTextarea:focus,
@@ -59,8 +60,8 @@
 
 .tswSuggestionsList {
   position: absolute;
-  top: calc(100% - 50px);
-  left: 0;
+  top: calc(100% - 60px);
+  left: 5px;
   right: 0;
   background: white;
   border: 1px solid #eee;

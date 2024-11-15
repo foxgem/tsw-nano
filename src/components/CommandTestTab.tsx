@@ -21,6 +21,7 @@ import {
 } from "~utils/constants";
 import { useState } from "react";
 import { createNanoModel, executeNanoModel } from "~utils/ai";
+import { marked } from "marked";
 
 interface CommandTestTabProps {
   command: Command;
@@ -157,7 +158,12 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({ command }) => {
             </Button>
           </div>
           <div className="border rounded p-4 min-h-[300px] ">
-            <p className="text-sm text-gray-500">{output}</p>
+            <p
+              className="text-sm text-gray-500"
+              dangerouslySetInnerHTML={{
+                __html: marked(output),
+              }}
+            />
           </div>
         </div>
       </CardContent>
