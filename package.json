@@ -57,7 +57,7 @@
     "typescript": "5.5.4"
   },
   "manifest": {
-    "permissions": ["contextMenus", "tabs", "storage", "alarms", "activeTab"],
+    "permissions": ["tabs", "storage", "alarms", "activeTab"],
     "background": {
       "service_worker": "background.ts"
     },

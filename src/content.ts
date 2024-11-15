@@ -42,11 +42,6 @@ createFloatingTogglePanel();
 
 chrome.runtime.onMessage.addListener((request) => {
   switch (request.action) {
-    case "showNanoMenu":
-      if (request.text) {
-        summarizeSelected("tsw-toggle-panel", request.text);
-      }
-      break;
     case "openChat":
       chattingHandler("tsw-toggle-panel");
       break;
