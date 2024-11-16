@@ -51,14 +51,14 @@
   box-shadow: none !important;
 }
 
-#tsw-close-right-part:hover {
+#tsw-close-panel:hover {
   background-color: rgb(209 213 219) !important;
   border: 0;
   color: unset;
   padding: 0;
 }
 
-#tsw-close-right-part {
+#tsw-close-panel {
   font-weight: 700;
   font-size: 14px;
   line-height: 1.25rem;

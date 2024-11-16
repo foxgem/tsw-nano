@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import TextSelectionMenu from "~components/TextSelectMenu";
+import { chattingHandler, cleanPageText, summarizeSelected } from "./handlers";
 import { createInputAssistant } from "~utils/ai";
 import { chattingHandler, summarizeSelected } from "./handlers";
 
@@ -8,7 +9,7 @@ export const iconArray = [
   {
     name: "Summary",
     action: () => {
-      summarizeSelected("tsw-toggle-panel", document.body.innerText);
+      summarizeSelected("tsw-toggle-panel", cleanPageText());
     },
   },
   {
@@ -97,11 +98,6 @@ createFloatingTogglePanel();
 
 chrome.runtime.onMessage.addListener((request) => {
   switch (request.action) {
-    case "showNanoMenu":
-      if (request.text) {
-        summarizeSelected("tsw-toggle-panel", request.text);
-      }
-      break;
     case "openChat":
       chattingHandler("tsw-toggle-panel");
       break;

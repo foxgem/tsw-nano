@@ -25,7 +25,7 @@ function withOutputPanel(
       title: title,
       placeHolder: placeHolder,
       onRender: () => {
-        const closeButton = document.querySelector("#tsw-close-right-part");
+        const closeButton = document.querySelector("#tsw-close-panel");
         if (closeButton) {
           closeButton.addEventListener("click", () => {
             panel.style.display = "none";
@@ -64,6 +64,18 @@ export async function summarizeSelected(
   });
 }
 
+export function cleanPageText() {
+  const temp = document.body.cloneNode(true) as HTMLElement;
+  temp
+    .querySelectorAll("code, pre, script, style, img")
+    .forEach((el) => el.remove());
+  const result = temp.innerText.replace(/\s+/g, " ").trim();
+
+  console.log(result);
+
+  return result;
+}
+
 export function chattingHandler(outputElm: string) {
   const panel = document.getElementById(outputElm);
   if (!panel) {
@@ -76,9 +88,9 @@ export function chattingHandler(outputElm: string) {
   const root = createRoot(panel);
   root.render(
     React.createElement(TSWChattingPanel, {
-      pageText: document.body.innerText,
+      pageText: cleanPageText(),
       onRender: () => {
-        const closeButton = document.querySelector("#tsw-close-right-part");
+        const closeButton = document.querySelector("#tsw-close-panel");
         if (closeButton) {
           closeButton.addEventListener("click", () => {
             panel.style.display = "none";

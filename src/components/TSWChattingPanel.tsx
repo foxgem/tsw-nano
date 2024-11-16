@@ -38,7 +38,7 @@ export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
             ))}
           </div>
           <div className={panelStyles.tswPanelHeaderSeparator} />
-          <button id="tsw-close-right-part" type="button">
+          <button id="tsw-close-panel" type="button">
             <ActionIcon name="Close" />
           </button>
         </div>

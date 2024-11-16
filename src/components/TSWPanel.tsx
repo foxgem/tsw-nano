@@ -37,7 +37,7 @@ export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
             ))}
           </div>
           <div className={panelStyles.tswPanelHeaderSeparator} />
-          <button id="tsw-close-right-part" type="button">
+          <button id="tsw-close-panel" type="button">
             <ActionIcon name="Close" />
           </button>
         </div>
