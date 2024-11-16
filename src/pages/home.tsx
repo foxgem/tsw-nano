@@ -1,4 +1,4 @@
-import { Bolt, BotMessageSquare, SquareSlash } from "lucide-react";
+import { Bolt, BotMessageSquare, ScrollText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
@@ -17,8 +17,8 @@ function MainPage() {
     window.close();
   };
 
-  const gotoSlashCommands = () => {
-    navigate("/slash-commands", {});
+  const gotoSystemPrompts = () => {
+    navigate("/system-prompts", {});
   };
 
   const gotoQuickActions = () => {
@@ -44,7 +44,7 @@ function MainPage() {
         </Button>
         <Button
           variant="outline"
-          onClick={() => gotoSlashCommands()}
+          onClick={() => gotoSystemPrompts()}
           className={cn(
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
@@ -52,8 +52,8 @@ function MainPage() {
             "bg-accent  hover:bg-primary hover:text-white",
           )}
         >
-          <SquareSlash className="mr-2" />
-          Slash Commands
+          <ScrollText className="mr-2" />
+          System Prompts
         </Button>
         <Button
           variant="outline"

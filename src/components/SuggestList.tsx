@@ -4,7 +4,7 @@ import type { Command } from "~/utils/types";
 
 interface SuggestListProps {
   onSelect: (item: string) => void;
-  category: "slash-commands" | "quick-actions";
+  category: "system-prompts" | "quick-actions";
 }
 
 const SuggestList: React.FC<SuggestListProps> = ({ onSelect, category }) => {

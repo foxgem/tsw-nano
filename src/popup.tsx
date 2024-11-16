@@ -3,8 +3,8 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import CommandManager from "./pages/commands";
 import MainPage from "./pages/home";
 
-import "./css/extention.css";
 import { useLocation } from "react-router-dom";
+import "./css/extention.css";
 
 function ContentWrapper() {
   const location = useLocation();
@@ -17,8 +17,8 @@ function ContentWrapper() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route
-          path="/slash-commands"
-          element={<CommandManager category="slash-commands" />}
+          path="/system-prompts"
+          element={<CommandManager category="system-prompts" />}
         />
         <Route
           path="/quick-actions"

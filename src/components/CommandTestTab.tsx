@@ -24,9 +24,13 @@ import { Card, CardContent } from "./ui/card";
 
 interface CommandTestTabProps {
   command: Command;
+  category: string;
 }
 
-const CommandTestTab: React.FC<CommandTestTabProps> = ({ command }) => {
+const CommandTestTab: React.FC<CommandTestTabProps> = ({
+  command,
+  category,
+}) => {
   const [testContent, setTestContent] = useState("");
   const handleTextClick = async () => {
     const element = document.getElementById("command-test-output");
@@ -38,7 +42,9 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({ command }) => {
       <CardContent>
         <div className="grid  grid-cols-2 gap-2 border rounded p-4 text-sm font-medium">
           <div>{command.name}</div>
-          <div>{findLabelByValue(NANOTYPE_OPTIONS, command.nano)}</div>
+          <div>
+            {findLabelByValue(NANOTYPE_OPTIONS[category], command.nano)}
+          </div>
           {command.nano === "languageModel" && (
             <>
               <div>

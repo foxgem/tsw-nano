@@ -47,7 +47,7 @@ import type {
 } from "~utils/types";
 
 export interface CommandManagerProps {
-  category: "slash-commands" | "quick-actions";
+  category: "system-prompts" | "quick-actions";
 }
 
 const emptyCommand: Command = {
@@ -318,7 +318,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
-                          {NANOTYPE_OPTIONS.map((option) => (
+                          {NANOTYPE_OPTIONS[category].map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                               {option.label}
                             </SelectItem>
@@ -914,7 +914,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
           </TabsContent>
 
           <TabsContent value="test" className="h-full">
-            <CommandTestTab command={currentCommand} />
+            <CommandTestTab command={currentCommand} category={category} />
           </TabsContent>
         </Tabs>
       </div>
