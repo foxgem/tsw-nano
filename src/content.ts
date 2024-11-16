@@ -1,14 +1,14 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import TextSelectionMenu from "~components/TextSelectMenu";
+import { createInputAssistant } from "~utils/ai";
+import type { Command } from "~utils/types";
 import {
   callNanoWithSelected,
   chattingHandler,
   cleanPageText,
   summarizeSelected,
 } from "./handlers";
-import { createInputAssistant } from "~utils/ai";
-import type { Command } from "~utils/types";
 
 export const iconArray = [
   {
@@ -36,10 +36,27 @@ function createSelectMenu() {
     await callNanoWithSelected(command, "tsw-toggle-panel", selectedText);
   };
 
+  const onTranslate = async () => {
+    const selectedText = window.getSelection()?.toString().trim();
+
+    console.log("translate: ", selectedText);
+  };
+
+  let hasSelection = false;
+
   document.addEventListener("selectionchange", () => {
     const newSelection = window.getSelection();
-    if (newSelection && newSelection.toString().trim() !== "") {
-      const range = newSelection.getRangeAt(0);
+    hasSelection = !!(newSelection && newSelection.toString().trim() !== "");
+    if (!hasSelection) {
+      container.style.display = "none";
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (!hasSelection) return;
+    const selection = window.getSelection();
+    if (selection && selection.toString().trim() !== "") {
+      const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
       const position = {
         x: rect.left + window.scrollX + rect.width / 2,
@@ -49,14 +66,13 @@ function createSelectMenu() {
       root.render(
         React.createElement(TextSelectionMenu, {
           category: "quick-actions",
-          selectedText: newSelection.toString().trim(),
+          selectedText: selection.toString().trim(),
           position,
           onSelect,
+          onTranslate,
         }),
       );
       container.style.display = "block";
-    } else {
-      container.style.display = "none";
     }
   });
 }

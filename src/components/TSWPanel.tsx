@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { iconArray } from "~/content";
 import panelStyles from "../css/panel.module.css";
+import commontyles from "../css/common.module.css";
 import { ActionIcon } from "./ActionIcon";
 
 export interface PanelProps {
@@ -28,7 +29,7 @@ export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
             {iconArray.map((icon) => (
               <button
                 type="button"
-                className={panelStyles.tswActionBtn}
+                className={commontyles.tswActionBtn}
                 id={`tsw-${icon.name.toLowerCase()}-btn`}
                 key={icon.name}
               >

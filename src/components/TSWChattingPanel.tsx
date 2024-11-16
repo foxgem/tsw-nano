@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { iconArray } from "~/content";
 import panelStyles from "../css/panel.module.css";
+import commontyles from "../css/common.module.css";
 import { ActionIcon } from "./ActionIcon";
 import { ChatUI } from "./ChatUI";
 import { Toaster } from "./ui/toaster";
@@ -29,7 +30,7 @@ export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
             {iconArray.map((icon) => (
               <button
                 type="button"
-                className={panelStyles.tswActionBtn}
+                className={commontyles.tswActionBtn}
                 id={`tsw-${icon.name.toLowerCase()}-btn`}
                 key={icon.name}
               >

@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
+import commontyles from "~/css/common.module.css";
 import { cn, upperCaseFirstLetter } from "~/utils/commons";
 import { chatWithPage, summariseLongContext } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
@@ -318,7 +319,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className={chatStyles.tswActionBtn}
+                        className={commontyles.tswActionBtn}
                         onClick={() => copyToClipboard(m.content)}
                       >
                         <Copy size={16} />
@@ -327,7 +328,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className={chatStyles.tswActionBtn}
+                          className={commontyles.tswActionBtn}
                           onClick={() => handleEdit(m)}
                           disabled={isStreaming || editingMessageId !== null}
                         >
@@ -339,7 +340,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className={chatStyles.tswActionBtn}
+                            className={commontyles.tswActionBtn}
                             onClick={(e) => handleRefresh(e)}
                             disabled={isStreaming || editingMessageId !== null}
                           >
@@ -405,7 +406,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className={chatStyles.tswActionBtn}
+                className={commontyles.tswActionBtn}
                 onClick={handleCancelEdit}
               >
                 <SquareX />
@@ -414,7 +415,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
             <Button
               variant="ghost"
               size="icon"
-              className={chatStyles.tswActionBtn}
+              className={commontyles.tswActionBtn}
               onClick={(e) => {
                 if (editingMessageId !== null) {
                   handleEditSubmit(e);

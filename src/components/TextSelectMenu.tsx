@@ -5,26 +5,29 @@ import { ActionIcon } from "~/components/ActionIcon";
 import { Button } from "~/components/ui/button";
 import type { Command } from "~utils/types";
 import styles from "../css/textselect.module.css";
+import commontyles from "~/css/common.module.css";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { cn } from "~utils/commons";
 
 interface Props {
   category: string;
   selectedText: string;
   position: { x: number; y: number };
-  onSelect?: (action: Command) => void;
+  onSelect: (action: Command) => void;
+  onTranslate: () => void;
 }
 export default function TextSelectionMenu({
   category,
   selectedText,
   onSelect,
   position,
+  onTranslate,
 }: Props) {
-  const [open, setOpen] = useState(false);
   const [commands, setCommands] = useState<Command[]>([]);
   useEffect(() => {
     const loadCommands = async () => {
@@ -45,6 +48,10 @@ export default function TextSelectionMenu({
     onSelect(menuItem);
   };
 
+  const handleTranslateClick = () => {
+    onTranslate();
+  };
+
   if (!selectedText) return null;
 
   return (
@@ -55,10 +62,22 @@ export default function TextSelectionMenu({
         top: `${position.y}px`,
       }}
     >
+      <Button
+        variant="ghost"
+        size="icon"
+        className={commontyles.tswActionBtn}
+        onClick={handleTranslateClick}
+      >
+        <ActionIcon name="Translate" />
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className={styles.tswTriggerButton}>
-            Quick Action <ActionIcon name="Menu" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(commontyles.tswActionBtn, styles.tswTriggerButton)}
+          >
+            <ActionIcon name="Menu" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
