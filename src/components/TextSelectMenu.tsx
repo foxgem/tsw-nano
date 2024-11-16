@@ -16,7 +16,7 @@ interface Props {
   category: string;
   selectedText: string;
   position: { x: number; y: number };
-  onSelect?: (action: string) => void;
+  onSelect?: (action: Command) => void;
 }
 export default function TextSelectionMenu({
   category,
@@ -31,7 +31,6 @@ export default function TextSelectionMenu({
       try {
         const result = await chrome.storage.local.get(category);
         if (result[category]) {
-          console.log(result[category]);
           setCommands(result[category]);
         }
       } catch (error) {
@@ -42,10 +41,8 @@ export default function TextSelectionMenu({
     loadCommands();
   }, [category]);
 
-  const handleMenuItemClick = (menuItem: string) => {
-    console.log(menuItem);
+  const handleMenuItemClick = (menuItem: Command) => {
     onSelect(menuItem);
-    // You can add more logic here to handle the menu item click
   };
 
   if (!selectedText) return null;
@@ -76,7 +73,7 @@ export default function TextSelectionMenu({
               key={command.name}
               className={styles.tswActionItem}
             >
-              <Button onClick={() => handleMenuItemClick(command.name)}>
+              <Button onClick={() => handleMenuItemClick(command)}>
                 {" "}
                 {command.name}
               </Button>

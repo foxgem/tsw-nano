@@ -1,9 +1,14 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import TextSelectionMenu from "~components/TextSelectMenu";
-import { chattingHandler, cleanPageText, summarizeSelected } from "./handlers";
+import {
+  callNanoWithSelected,
+  chattingHandler,
+  cleanPageText,
+  summarizeSelected,
+} from "./handlers";
 import { createInputAssistant } from "~utils/ai";
-import { chattingHandler, summarizeSelected } from "./handlers";
+import type { Command } from "~utils/types";
 
 export const iconArray = [
   {
@@ -26,21 +31,9 @@ function createSelectMenu() {
   document.body.appendChild(container);
   const root = createRoot(container);
 
-  const onSelect = (action: string) => {
-    console.log("action--", action);
+  const onSelect = async (command: Command) => {
     const selectedText = window.getSelection()?.toString().trim();
-    switch (action) {
-      case "Summary":
-        //summarizeSelected("tsw-toggle-panel", selectedText || '');
-        break;
-      case "Chat":
-        //chattingHandler("tsw-toggle-panel");
-        break;
-    }
-    //container.style.display = 'none'
-
-    console.log("2");
-    root.render(null);
+    await callNanoWithSelected(command, "tsw-toggle-panel", selectedText);
   };
 
   document.addEventListener("selectionchange", () => {
@@ -64,8 +57,6 @@ function createSelectMenu() {
       container.style.display = "block";
     } else {
       container.style.display = "none";
-      console.log("1");
-      //root.render(null)
     }
   });
 }

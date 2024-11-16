@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import { TSWChattingPanel } from "~components/TSWChattingPanel";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
-import { summarise } from "./utils/ai";
+import { callNanoModel, summarise } from "./utils/ai";
+import type { Command } from "~utils/types";
 
 function withOutputPanel(
   outputElm: string,
@@ -60,6 +61,19 @@ export async function summarizeSelected(
     const summaryElement = document.getElementById("tsw-output-body");
     if (summaryElement) {
       await summarise(textSelected, summaryElement);
+    }
+  });
+}
+
+export async function callNanoWithSelected(
+  command: Command,
+  outputElm: string,
+  textSelected: string,
+) {
+  withOutputPanel(outputElm, "Thinking", "Nano", async () => {
+    const element = document.getElementById("tsw-output-body");
+    if (textSelected) {
+      await callNanoModel(command, textSelected, element);
     }
   });
 }

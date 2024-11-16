@@ -10,12 +10,12 @@ const checkNanoAvailability = async (api: NanoApi) => {
   }
 };
 
-export async function createNanoModel(command: Command) {
+async function createNanoModel(command: Command) {
   await checkNanoAvailability(command.nano);
   return window.ai[command.nano].create(command.options as any);
 }
 
-export async function executeNanoModel(
+async function executeNanoModel(
   nanoModel: AILanguageModel | AISummarizer | AIWriter | AIRewriter,
   params: string,
 ) {
@@ -28,6 +28,29 @@ export async function executeNanoModel(
   }
 
   return "unsupported";
+}
+
+export async function callNanoModel(
+  command: Command,
+  params: string,
+  messageElement: HTMLElement,
+) {
+  const root = createRoot(messageElement);
+  let nanoModel: AILanguageModel | AISummarizer | AIWriter | AIRewriter;
+  try {
+    await checkNanoAvailability(command.nano);
+    nanoModel = await window.ai[command.nano].create(command.options as any);
+    const result = await executeNanoModel(nanoModel, params);
+    root.render(React.createElement(StreamMessage, { outputString: result }));
+  } catch (e) {
+    root.render(
+      React.createElement(StreamMessage, { outputString: e.message }),
+    );
+  } finally {
+    if (nanoModel && "destroy" in nanoModel) {
+      nanoModel.destroy();
+    }
+  }
 }
 
 const pageRagPrompt = (context: string) => {

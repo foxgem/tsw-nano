@@ -1,3 +1,17 @@
+import { useState } from "react";
+import { callNanoModel } from "~utils/ai";
+import { cn } from "~utils/commons";
+import {
+  findLabelByValue,
+  FORMAT_OPTIONS,
+  LENGTH_OPTIONS,
+  NANOTYPE_OPTIONS,
+  REWRITER_FORMAT_OPTIONS,
+  REWRITER_LENGTH_OPTIONS,
+  REWRITER_TONE_OPTIONS,
+  SUMMARIZER_TYPE_OPTIONS,
+  WRITER_TONE_OPTIONS,
+} from "~utils/constants";
 import type {
   Command,
   LMOptions,
@@ -7,21 +21,6 @@ import type {
 } from "~utils/types";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { cn } from "~utils/commons";
-import {
-  findLabelByValue,
-  FORMAT_OPTIONS,
-  NANOTYPE_OPTIONS,
-  REWRITER_FORMAT_OPTIONS,
-  REWRITER_LENGTH_OPTIONS,
-  REWRITER_TONE_OPTIONS,
-  SUMMARIZER_TYPE_OPTIONS,
-  LENGTH_OPTIONS,
-  WRITER_TONE_OPTIONS,
-} from "~utils/constants";
-import { useState } from "react";
-import { createNanoModel, executeNanoModel } from "~utils/ai";
-import { marked } from "marked";
 
 interface CommandTestTabProps {
   command: Command;
@@ -29,10 +28,9 @@ interface CommandTestTabProps {
 
 const CommandTestTab: React.FC<CommandTestTabProps> = ({ command }) => {
   const [testContent, setTestContent] = useState("");
-  const [output, setOutput] = useState("");
   const handleTextClick = async () => {
-    const nanoModel = await createNanoModel(command);
-    setOutput(await executeNanoModel(nanoModel, testContent));
+    const element = document.getElementById("command-test-output");
+    await callNanoModel(command, testContent, element);
   };
 
   return (
@@ -158,12 +156,7 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({ command }) => {
             </Button>
           </div>
           <div className="border rounded p-4 min-h-[300px] ">
-            <p
-              className="text-sm text-gray-500"
-              dangerouslySetInnerHTML={{
-                __html: marked(output),
-              }}
-            />
+            <p id="command-test-output" className="text-sm text-gray-500" />
           </div>
         </div>
       </CardContent>
