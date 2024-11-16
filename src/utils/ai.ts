@@ -4,9 +4,15 @@ import { StreamMessage } from "~/components/StreamMessage";
 import type { Command, NanoApi } from "./types";
 
 const checkNanoAvailability = async (api: NanoApi) => {
-  const { available } = await window.ai[api].capabilities();
-  if (available !== "readily") {
+  if (!window.ai || !window.ai[api]) {
     throw new Error("Nano is not available");
+  }
+
+  if ("capabilities" in window.ai[api]) {
+    const { available } = await window.ai[api].capabilities();
+    if (available !== "readily") {
+      throw new Error("Nano is not available");
+    }
   }
 };
 
@@ -27,6 +33,13 @@ async function executeNanoModel(
     return await nanoModel.summarize(params);
   }
 
+  if ("write" in nanoModel) {
+    return await nanoModel.write(params);
+  }
+
+  if ("rewrite" in nanoModel) {
+    return await nanoModel.rewrite(params);
+  }
   return "unsupported";
 }
 
@@ -38,8 +51,7 @@ export async function callNanoModel(
   const root = createRoot(messageElement);
   let nanoModel: AILanguageModel | AISummarizer | AIWriter | AIRewriter;
   try {
-    await checkNanoAvailability(command.nano);
-    nanoModel = await window.ai[command.nano].create(command.options as any);
+    nanoModel = await createNanoModel(command);
     const result = await executeNanoModel(nanoModel, params);
     root.render(React.createElement(StreamMessage, { outputString: result }));
   } catch (e) {

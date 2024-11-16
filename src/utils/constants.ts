@@ -23,6 +23,7 @@ export const TABTRIGGER_STYLES = cn(
 export const NANOTYPE_OPTIONS = [
   { value: "languageModel", label: "Language Model" },
   { value: "summarizer", label: "Summarizer" },
+  // not supported in extension
   // { value: "writer", label: "Writer" },
   // { value: "rewriter", label: "Rewriter" },
 ];
