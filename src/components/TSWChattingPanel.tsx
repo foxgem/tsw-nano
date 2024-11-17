@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { iconArray } from "~/content";
-import panelStyles from "../css/panel.module.css";
 import commontyles from "../css/common.module.css";
+import panelStyles from "../css/panel.module.css";
 import { ActionIcon } from "./ActionIcon";
 import { ChatUI } from "./ChatUI";
 import { Toaster } from "./ui/toaster";
