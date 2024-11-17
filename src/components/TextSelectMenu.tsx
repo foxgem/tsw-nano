@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ActionIcon } from "~/components/ActionIcon";
 import { Button } from "~/components/ui/button";
+import commontyles from "~/css/common.module.css";
+import { cn, loadCommandsFromStorage } from "~utils/commons";
 import type { Command } from "~utils/types";
 import styles from "../css/textselect.module.css";
-import commontyles from "~/css/common.module.css";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { cn } from "~utils/commons";
 
 interface Props {
   category: string;
@@ -31,14 +31,8 @@ export default function TextSelectionMenu({
   const [commands, setCommands] = useState<Command[]>([]);
   useEffect(() => {
     const loadCommands = async () => {
-      try {
-        const result = await chrome.storage.local.get(category);
-        if (result[category]) {
-          setCommands(result[category]);
-        }
-      } catch (error) {
-        console.error("Error loading commands:", error);
-      }
+      const commands = await loadCommandsFromStorage(category);
+      setCommands(commands);
     };
 
     loadCommands();

@@ -1,45 +1,39 @@
 .tswMenuContainer {
-  position: absolute;
-  transform: translate(-50%, 8px);
-  z-index: 9999;
-  padding: 5px 10px;
-  border-radius: 8px;
-  background-color: #ffffff;
-  box-shadow: 0 6px 20px rgba(100, 116, 139, 0.2), 0 4px 10px
-    rgba(0, 0, 0, 0.15);
   font-size: 14px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
+  justify-content: right;
+  padding-bottom: 4px;
 }
 
 .tswTriggerButton {
-  border: none !important;
   background-color: #ffffff !important;
+  border: 0 !important;
   font-weight: 700;
+  font-size: 14px;
   display: flex;
   align-items: center;
+  gap: 4px;
+  padding: 0.5rem 1rem;
 }
 
 .menuWrapper {
   position: relative;
 }
 
-.tswActionList {
-  width: 200px;
+.tswPromptList {
   background: #ffffff !important;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  margin-top: 4px;
   font-size: 14px;
-  max-width: 300px;
+  max-width: 200px;
   max-height: 300px;
   overflow-y: auto !important;
+  z-index: 4000001;
+  margin-right: 10px;
 }
 
-.tswActionItem {
+.tswPromptItem {
   padding: 8px 20px;
   cursor: pointer;
   border: none;
@@ -54,19 +48,24 @@
   font-weight: 400;
 }
 
-.tswActionItem:hover {
+.tswPromptItem:hover {
   background-color: #f1f5f9;
   color: #3b82f6;
   border: 0;
   border-radius: 0;
 }
 
-.tswActionItem button {
+.tswPromptItem button {
   padding: 0 !important;
   height: unset !important;
   width: 100%;
+  max-width: 170px;
   justify-content: start !important;
   text-align: left !important;
   background-color: unset !important;
   border: 0 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
 }

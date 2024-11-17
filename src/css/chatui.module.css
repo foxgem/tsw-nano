@@ -5,10 +5,9 @@
 
 .tswPanelFooter {
   position: sticky;
+  border-top: 1px solid rgb(224, 224, 224);
   bottom: 0;
-  padding: 1rem 0 0;
-  display: flex;
-  gap: 1rem;
+  padding: 0rem 0 1rem 0;
   max-height: 200px;
 }
 

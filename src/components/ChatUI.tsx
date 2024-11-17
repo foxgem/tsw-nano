@@ -18,6 +18,7 @@ import { cn, upperCaseFirstLetter } from "~/utils/commons";
 import { nanoPrompt, pageRagPrompt, summariseLongContext } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
+import SystemPromptMenu from "./SystemPromptMenu";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
 
@@ -234,6 +235,10 @@ export function ChatUI({ pageText }: ChatUIProps) {
     );
   };
 
+  const handlePromptSelect = (prompt) => {
+    console.log(prompt);
+  };
+
   return (
     <>
       <div className={chatStyles.chatContainer}>
@@ -356,6 +361,10 @@ export function ChatUI({ pageText }: ChatUIProps) {
         </div>
       </div>
       <div className={chatStyles.tswPanelFooter} id="tsw-panel-footer">
+        <SystemPromptMenu
+          category="system-prompts"
+          onSelect={(prompt) => handlePromptSelect(prompt)}
+        />
         <div className={chatStyles.inputContainer}>
           <Textarea
             value={inputValue}
