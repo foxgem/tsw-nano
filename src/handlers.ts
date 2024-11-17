@@ -84,9 +84,6 @@ export function cleanPageText() {
     .querySelectorAll("code, pre, script, style, img")
     .forEach((el) => el.remove());
   const result = temp.innerText.replace(/\s+/g, " ").trim();
-
-  console.log(result);
-
   return result;
 }
 

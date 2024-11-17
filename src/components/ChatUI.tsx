@@ -15,7 +15,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import { cn, upperCaseFirstLetter } from "~/utils/commons";
-import { chatWithPage, summariseLongContext } from "~utils/ai";
+import { nanoPrompt, pageRagPrompt, summariseLongContext } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
 import { Textarea } from "./ui/textarea";
@@ -25,7 +25,7 @@ marked.setOptions({
   breaks: true,
 });
 
-const prepareContext = async (pageText: string) => {
+const preparePageRagPrompt = async (pageText: string) => {
   const cacheKey = `summarized_${window.location.pathname}`;
   const cached = sessionStorage.getItem(cacheKey);
 
@@ -34,10 +34,10 @@ const prepareContext = async (pageText: string) => {
   if (pageText.length >= 30000) {
     const summarized = await summariseLongContext(pageText);
     sessionStorage.setItem(cacheKey, summarized);
-    return summarized;
+    return pageRagPrompt(summarized);
   }
 
-  return pageText;
+  return pageRagPrompt(pageText);
 };
 
 type Message = {
@@ -150,9 +150,9 @@ export function ChatUI({ pageText }: ChatUIProps) {
           },
         ]);
 
-        const textStream = await chatWithPage(
-          await prepareContext(pageText),
+        const textStream = await nanoPrompt(
           newMessages[newMessages.length - 1].content,
+          await preparePageRagPrompt(pageText),
         );
         let fullText = "";
 

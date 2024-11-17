@@ -65,7 +65,7 @@ export async function callNanoModel(
   }
 }
 
-const pageRagPrompt = (context: string) => {
+export const pageRagPrompt = (context: string) => {
   return `
   You are an expert in answering user questions. You always understand user questions well, and then provide high-quality answers based on the information provided in the context.
   Try to keep the answer concise and relevant to the context without providing unnecessary information and explanations.
@@ -115,33 +115,21 @@ export const summariseLongContext = async (text: string) => {
   }
 };
 
-export const createInputAssistant = async () => {
-  await checkNanoAvailability("languageModel");
-  return await window.ai.languageModel.create({
-    systemPrompt: `Task: Generate relevant and diverse continuations for text, generate only one of possible continuations.Your responses should be:
-        Laconic: Only the words after the input text. Only one sentence.
-        Relevant: The generated content should be highly relevant to the input text.
-        Unique: Provide only the most like continuations.
-        Natural and fluent: The generated text should be grammatically correct and read naturally.
-        Context-aware: Understand the context and generate responses that are appropriate.
-    `,
-    initialPrompts: [
-      {
-        role: "assistant",
-        content: "Predict the user's next inputting based on the given text.",
-      },
-    ],
-  });
-};
-
-export const chatWithPage = async (pageText: string, userMessage: string) => {
+export const nanoPrompt = async (
+  userMessage: string,
+  systemPrompt: string,
+  initialPrompts?: Array<
+    AILanguageModelAssistantPrompt | AILanguageModelUserPrompt
+  >,
+) => {
   let session: AILanguageModel | undefined;
   try {
     await checkNanoAvailability("languageModel");
-    const session = await window.ai.languageModel.create({
-      systemPrompt: pageRagPrompt(pageText),
+    session = await window.ai.languageModel.create({
+      systemPrompt,
+      initialPrompts,
     });
-    return session.prompt(userMessage);
+    return await session.prompt(userMessage);
   } catch (e) {
     return e.message;
   } finally {
@@ -149,4 +137,20 @@ export const chatWithPage = async (pageText: string, userMessage: string) => {
       session.destroy();
     }
   }
+};
+
+export const predictNextInput = async (text: string) => {
+  const systemPrompt = `Task: Generate relevant and diverse continuations for text, generate only one of possible continuations.Your responses should be:
+      Laconic: Only the words after the input text. Only one sentence.
+      Relevant: The generated content should be highly relevant to the input text.
+      Unique: Provide only the most like continuations.
+      Natural and fluent: The generated text should be grammatically correct and read naturally.
+      Context-aware: Understand the context and generate responses that are appropriate.
+  `;
+  return await nanoPrompt(text, systemPrompt, [
+    {
+      role: "assistant",
+      content: "Predict the user's next inputting based on the given text.",
+    },
+  ]);
 };

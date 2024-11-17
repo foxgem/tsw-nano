@@ -1,7 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import TextSelectionMenu from "~components/TextSelectMenu";
-import { createInputAssistant } from "~utils/ai";
 import type { Command } from "~utils/types";
 import {
   callNanoWithSelected,
@@ -119,22 +118,20 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
   }
 });
 
-createInputAssistant().then((assistant) => {
-  document.addEventListener("keyup", async (e) => {
-    if (
-      !(
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      )
-    ) {
-      return;
-    }
+document.addEventListener("keyup", async (e) => {
+  if (
+    !(
+      e.target instanceof HTMLInputElement ||
+      e.target instanceof HTMLTextAreaElement
+    )
+  ) {
+    return;
+  }
 
-    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
-    if (target.value.split(" ").length <= 3) {
-      return;
-    }
+  const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+  if (target.value.split(" ").length <= 3) {
+    return;
+  }
 
-    target.value += await assistant.prompt(target.value);
-  });
+  // target.value += await predictNextInput(target.value);
 });
