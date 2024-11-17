@@ -4,7 +4,6 @@ export type LMOptions = {
   topK?: number;
   temperature?: number;
   systemPrompt?: string;
-  prompt: string;
 };
 
 export type SummarizerOptions = {

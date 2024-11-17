@@ -50,7 +50,6 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({
               <div>
                 System Prompt: {(command.options as LMOptions).systemPrompt}
               </div>
-              <div>Prompt: {(command.options as LMOptions).prompt}</div>
               <div>Top K: {(command.options as LMOptions).topK}</div>
               <div>
                 Temperature: {(command.options as LMOptions).temperature}

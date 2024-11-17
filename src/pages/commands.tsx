@@ -57,7 +57,6 @@ const emptyCommand: Command = {
     topK: 1,
     temperature: 0.7,
     systemPrompt: "",
-    prompt: "",
   } as LMOptions,
 };
 
@@ -66,7 +65,6 @@ const defaultOptionsMap = {
     topK: 3,
     temperature: 1,
     systemPrompt: "",
-    prompt: "",
   } as LMOptions,
   summarizer: {
     sharedContext: "",
@@ -351,28 +349,6 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                               options: {
                                 ...(currentCommand.options as LMOptions),
                                 systemPrompt: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="w-full">
-                        <label className="text-sm font-medium" htmlFor="prompt">
-                          Prompt
-                        </label>
-                        <Textarea
-                          id="prompt"
-                          className="w-full rounded  text-sm placeholder:text-sm"
-                          placeholder="Enter prompt"
-                          value={
-                            (currentCommand.options as LMOptions).prompt || ""
-                          }
-                          onChange={(e) =>
-                            setCurrentCommand({
-                              ...currentCommand,
-                              options: {
-                                ...(currentCommand.options as LMOptions),
-                                prompt: e.target.value,
                               },
                             })
                           }
