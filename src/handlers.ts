@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { TSWChattingPanel } from "~components/TSWChattingPanel";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
-import { callNanoModel, summarise } from "./utils/ai";
+import { callNanoModel, summarise, translate } from "./utils/ai";
 import type { Command } from "~utils/types";
 
 function withOutputPanel(
@@ -74,6 +74,18 @@ export async function callNanoWithSelected(
     const element = document.getElementById("tsw-output-body");
     if (textSelected) {
       await callNanoModel(command, textSelected, element);
+    }
+  });
+}
+
+export async function translateSelected(
+  textSelected: string,
+  outputElm: string,
+) {
+  withOutputPanel(outputElm, "Thinking", "Nano", async () => {
+    const element = document.getElementById("tsw-output-body");
+    if (textSelected) {
+      await translate(textSelected, "en", "zh", element);
     }
   });
 }

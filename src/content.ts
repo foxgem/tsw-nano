@@ -7,6 +7,7 @@ import {
   chattingHandler,
   cleanPageText,
   summarizeSelected,
+  translateSelected,
 } from "./handlers";
 
 export const iconArray = [
@@ -37,8 +38,7 @@ function createSelectMenu() {
 
   const onTranslate = async () => {
     const selectedText = window.getSelection()?.toString().trim();
-
-    console.log("translate: ", selectedText);
+    await translateSelected(selectedText, "tsw-toggle-panel");
   };
 
   let hasSelection = false;

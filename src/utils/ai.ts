@@ -154,3 +154,39 @@ export const predictNextInput = async (text: string) => {
     },
   ]);
 };
+
+export async function translate(
+  text: string,
+  sourceLanguage: string,
+  targetLanguage: string,
+  messageElement: HTMLElement,
+) {
+  const root = createRoot(messageElement);
+  try {
+    if (
+      "translation" in window &&
+      "createTranslator" in (window.translation as any)
+    ) {
+      const translator = await (window.translation as any).createTranslator({
+        sourceLanguage,
+        targetLanguage,
+      });
+      const result = await translator.translate(text);
+      root.render(
+        React.createElement(StreamMessage, {
+          outputString: `
+        ${text}
+        ------ translation ------
+        ${result}
+        `,
+        }),
+      );
+    } else {
+      throw new Error("Translator is not available");
+    }
+  } catch (e) {
+    root.render(
+      React.createElement(StreamMessage, { outputString: e.message }),
+    );
+  }
+}
