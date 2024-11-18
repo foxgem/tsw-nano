@@ -120,20 +120,36 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
   }
 });
 
-document.addEventListener("keyup", async (e) => {
-  if (
-    !(
-      e.target instanceof HTMLInputElement ||
-      e.target instanceof HTMLTextAreaElement
-    )
-  ) {
-    return;
-  }
+// let processing = false;
+// document.addEventListener("keyup", async (e) => {
+//   if (processing) {
+//     return;
+//   }
 
-  const target = e.target as HTMLInputElement | HTMLTextAreaElement;
-  if (target.value.split(" ").length <= 3) {
-    return;
-  }
+//   if (e.key !== " ") {
+//     return;
+//   }
 
-  // target.value += await predictNextInput(target.value);
-});
+//   if (
+//     !(
+//       e.target instanceof HTMLInputElement ||
+//       e.target instanceof HTMLTextAreaElement
+//     )
+//   ) {
+//     return;
+//   }
+
+//   const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+//   const text = target.value.trim();
+//   const sentences = text.split(/[.?]/);
+//   const currentEditing = sentences[sentences.length - 1].trimStart();
+//   if (currentEditing.split(" ").length < 5) {
+//     return;
+//   }
+
+//   console.log("currentEditing", currentEditing);
+
+//   processing = true;
+//   target.value += `${await predictNextInput(currentEditing)}`;
+//   processing = false;
+// });

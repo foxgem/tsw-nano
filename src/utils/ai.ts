@@ -140,19 +140,12 @@ export const nanoPrompt = async (
 };
 
 export const predictNextInput = async (text: string) => {
-  const systemPrompt = `Task: Generate relevant and diverse continuations for text, generate only one of possible continuations.Your responses should be:
-      Laconic: Only the words after the input text. Only one sentence.
-      Relevant: The generated content should be highly relevant to the input text.
-      Unique: Provide only the most like continuations.
-      Natural and fluent: The generated text should be grammatically correct and read naturally.
-      Context-aware: Understand the context and generate responses that are appropriate.
+  const systemPrompt = `You are an input text completion model. The user is currently editing the following text:
+    ${text}[BLANK]
+  Their cursor is located at the "[BLANK]". They have requested that you fill in the "[BLANK]" with text that makes the whole sentence meaningful.
+  Please generate the text. Your output will be only the text that should replace the "[BLANK]", without repeating any of the prefix or suffix, without any natural language explanation, and without messing up indentation.".
   `;
-  return await nanoPrompt(text, systemPrompt, [
-    {
-      role: "assistant",
-      content: "Predict the user's next inputting based on the given text.",
-    },
-  ]);
+  return await nanoPrompt(text, systemPrompt);
 };
 
 export async function translate(
