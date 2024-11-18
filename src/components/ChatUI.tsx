@@ -21,6 +21,7 @@ import { StreamMessage } from "./StreamMessage";
 import SystemPromptMenu from "./SystemPromptMenu";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
+import type { Command, LMOptions } from "~utils/types";
 
 marked.setOptions({
   breaks: true,
@@ -60,6 +61,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortController = useRef<AbortController | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
+  const [systemPrompt, setSystemPrompt] = useState<Command>();
 
   const { toast } = useToast();
 
@@ -153,7 +155,9 @@ export function ChatUI({ pageText }: ChatUIProps) {
 
         const textStream = await nanoPrompt(
           newMessages[newMessages.length - 1].content,
-          await preparePageRagPrompt(pageText),
+          systemPrompt.name === "Default"
+            ? await preparePageRagPrompt(pageText)
+            : (systemPrompt.options as LMOptions).systemPrompt,
         );
         let fullText = "";
 
@@ -235,8 +239,8 @@ export function ChatUI({ pageText }: ChatUIProps) {
     );
   };
 
-  const handlePromptSelect = (prompt) => {
-    console.log(prompt);
+  const handlePromptSelect = (prompt: Command) => {
+    setSystemPrompt(prompt);
   };
 
   return (
