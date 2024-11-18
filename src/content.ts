@@ -34,11 +34,13 @@ function createSelectMenu() {
   const onSelect = async (command: Command) => {
     const selectedText = window.getSelection()?.toString().trim();
     await callNanoWithSelected(command, "tsw-toggle-panel", selectedText);
+    window.getSelection()?.removeAllRanges();
   };
 
   const onTranslate = async () => {
     const selectedText = window.getSelection()?.toString().trim();
     await translateSelected(selectedText, "tsw-toggle-panel");
+    window.getSelection()?.removeAllRanges();
   };
 
   let hasSelection = false;

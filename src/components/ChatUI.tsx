@@ -361,10 +361,6 @@ export function ChatUI({ pageText }: ChatUIProps) {
         </div>
       </div>
       <div className={chatStyles.tswPanelFooter} id="tsw-panel-footer">
-        <SystemPromptMenu
-          category="system-prompts"
-          onSelect={(prompt) => handlePromptSelect(prompt)}
-        />
         <div className={chatStyles.inputContainer}>
           <Textarea
             value={inputValue}
@@ -411,40 +407,48 @@ export function ChatUI({ pageText }: ChatUIProps) {
             id="tsw-chat-textarea"
           />
           <div className={chatStyles.editActions}>
-            {editingMessageId !== null && (
+            <div>
+              <SystemPromptMenu
+                category="system-prompts"
+                onSelect={(prompt) => handlePromptSelect(prompt)}
+              />
+            </div>
+            <div>
+              {editingMessageId !== null && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={commontyles.tswActionBtn}
+                  onClick={handleCancelEdit}
+                >
+                  <SquareX />
+                </Button>
+              )}
               <Button
                 variant="ghost"
                 size="icon"
                 className={commontyles.tswActionBtn}
-                onClick={handleCancelEdit}
+                onClick={(e) => {
+                  if (editingMessageId !== null) {
+                    handleEditSubmit(e);
+                  } else {
+                    handleSend(e);
+                  }
+                }}
               >
-                <SquareX />
+                <CircleArrowUp className={chatStyles.submitIcon} />
               </Button>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className={commontyles.tswActionBtn}
-              onClick={(e) => {
-                if (editingMessageId !== null) {
-                  handleEditSubmit(e);
-                } else {
-                  handleSend(e);
-                }
-              }}
-            >
-              <CircleArrowUp className={chatStyles.submitIcon} />
-            </Button>
-            {isStreaming && !editingMessageId && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleStopChat}
-                className={chatStyles.tswActionBtn}
-              >
-                <CircleStop className={chatStyles.stopIcon} />
-              </Button>
-            )}
+              {isStreaming && !editingMessageId && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleStopChat}
+                  className={chatStyles.tswActionBtn}
+                >
+                  <CircleStop className={chatStyles.stopIcon} />
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>

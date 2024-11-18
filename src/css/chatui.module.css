@@ -5,7 +5,6 @@
 
 .tswPanelFooter {
   position: sticky;
-  border-top: 1px solid rgb(224, 224, 224);
   bottom: 0;
   padding: 0rem 0 1rem 0;
   max-height: 200px;
@@ -157,13 +156,10 @@
 
 .editActions {
   display: flex;
-  margin-left: 0.5rem;
+  justify-content: space-between;
 }
 
 .inputContainer {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
   width: 100%;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
