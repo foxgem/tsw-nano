@@ -241,7 +241,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
               tabIndex={0}
             >
               <div className="flex justify-between items-center">
-                <span className="truncate text-sm font-medium">
+                <span className="truncate text-sm font-medium w-[190px]">
                   {command.name}
                 </span>
                 <Button

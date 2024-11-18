@@ -56,17 +56,26 @@
 
 .tswActionItem:hover {
   background-color: #f1f5f9;
-  color: #3b82f6;
+  color: #3b82f6 !important;
   border: 0;
   border-radius: 0;
 }
 
 .tswActionItem button {
+  color: black !important;
   padding: 0 !important;
   height: unset !important;
-  width: 100%;
   justify-content: start !important;
   text-align: left !important;
   background-color: unset !important;
   border: 0 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+  overflow: hidden;
+  width: 150px;
+  display: block !important;
+}
+
+.tswActionItem button:hover {
+  color: #3b82f6 !important;
 }

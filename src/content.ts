@@ -66,7 +66,6 @@ function createSelectMenu() {
 
       root.render(
         React.createElement(TextSelectionMenu, {
-          category: "quick-actions",
           selectedText: selection.toString().trim(),
           position,
           onSelect,
