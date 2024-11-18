@@ -2,7 +2,6 @@ import { useState } from "react";
 import { callNanoModel } from "~utils/ai";
 import { cn } from "~utils/commons";
 import {
-  findLabelByValue,
   FORMAT_OPTIONS,
   LENGTH_OPTIONS,
   NANOTYPE_OPTIONS,
@@ -11,6 +10,7 @@ import {
   REWRITER_TONE_OPTIONS,
   SUMMARIZER_TYPE_OPTIONS,
   WRITER_TONE_OPTIONS,
+  findLabelByValue,
 } from "~utils/constants";
 import type {
   Command,
@@ -40,19 +40,22 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({
   return (
     <Card className="h-full pt-4">
       <CardContent>
-        <div className="grid  grid-cols-2 gap-2 border rounded p-4 text-sm font-medium">
-          <div>{command.name}</div>
+        <div className="border rounded p-4 text-sm font-medium">
+          <div>Name: {command.name}</div>
+
           <div>
-            {findLabelByValue(NANOTYPE_OPTIONS[category], command.nano)}
+            Type: {findLabelByValue(NANOTYPE_OPTIONS[category], command.nano)}
           </div>
           {command.nano === "languageModel" && (
             <>
-              <div>
+              <div className="break-all">
                 System Prompt: {(command.options as LMOptions).systemPrompt}
               </div>
-              <div>Top K: {(command.options as LMOptions).topK}</div>
-              <div>
-                Temperature: {(command.options as LMOptions).temperature}
+              <div className="grid  grid-cols-2 gap-2 ">
+                <div>Top K: {(command.options as LMOptions).topK}</div>
+                <div>
+                  Temperature: {(command.options as LMOptions).temperature}
+                </div>
               </div>
             </>
           )}
@@ -62,20 +65,28 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({
                 Shared Context:
                 {(command.options as SummarizerOptions).sharedContext}
               </div>
-              <div>
-                {" "}
-                Type:
-                {findLabelByValue(
-                  SUMMARIZER_TYPE_OPTIONS,
-                  (command.options as SummarizerOptions).type,
-                )}
-              </div>
-              <div>
-                Format:{" "}
-                {findLabelByValue(
-                  FORMAT_OPTIONS,
-                  (command.options as SummarizerOptions).format,
-                )}
+              <div className="grid  grid-cols-2 gap-2 ">
+                <div>
+                  Type:
+                  {findLabelByValue(
+                    SUMMARIZER_TYPE_OPTIONS,
+                    (command.options as SummarizerOptions).type,
+                  )}
+                </div>
+                <div>
+                  Format:
+                  {findLabelByValue(
+                    FORMAT_OPTIONS,
+                    (command.options as SummarizerOptions).format,
+                  )}
+                </div>
+                <div>
+                  Length:
+                  {findLabelByValue(
+                    FORMAT_OPTIONS,
+                    (command.options as SummarizerOptions).length,
+                  )}
+                </div>
               </div>
             </>
           )}
@@ -153,7 +164,7 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({
                 "px-4 py-2 rounded-full border-0 justify-start",
                 "cursor-pointer",
                 "transition-colors duration-300",
-                "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
+                "bg-primary hover:opacity-75 hover:bg-primary text-white dark:text-white justify-center",
               )}
               onClick={handleTextClick}
             >

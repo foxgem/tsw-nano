@@ -203,19 +203,29 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
     setError("");
   };
 
+  useEffect(() => {
+    if (commands.length >= 5 && !isEditing) {
+      setError("Limited 5");
+    } else {
+      setError("");
+    }
+  }, [commands.length, isEditing]);
+
   // Rest of the JSX remains identical
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex bg-gray-50">
       {/* Left Panel */}
-      <div className="w-64 border-r bg-white p-4 overflow-y-auto">
+      <div className="w-64 border-r bg-white p-4 ">
         <div className="mb-4">
           <Button
             className={cn(
               "px-4 py-2 rounded-full border-0 justify-start",
               "cursor-pointer",
-              "transition-colors duration-300",
-              "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center w-full",
+              "transition-colors duration-300 w-full",
+              "bg-primary hover:opacity-75 hover:bg-primary text-white dark:text-white justify-center",
+              commands.length >= 5 && "opacity-50 cursor-not-allowed",
             )}
+            disabled={commands.length >= 5}
             onClick={() => {
               handleCancel();
               setSelectedCommand(null);
@@ -224,7 +234,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
             <Plus className="w-4 h-4 mr-2" /> New
           </Button>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 overflow-y-auto h-[500px]">
           {commands.map((command) => (
             <div
               key={command.name}
@@ -247,13 +257,13 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8"
+                  className="h-8 w-8 text-red-500"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDelete(command);
                   }}
                 >
-                  <Trash2 className="w-4 h-4 text-gray-500" />
+                  <Trash2 className="w-4 h-4 text-red hover:text-gray-500" />
                 </Button>
               </div>
             </div>
@@ -262,8 +272,8 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4 overflow-y-auto h-full">
-        <Tabs defaultValue="settings" className="h-full">
+      <div className="flex-1 p-4">
+        <Tabs defaultValue="settings">
           <TabsList>
             <TabsTrigger value="settings" className={TABTRIGGER_STYLES}>
               Setting
@@ -273,8 +283,8 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="settings" className="h-full">
-            <Card className="pt-4">
+          <TabsContent value="settings">
+            <Card className="h-[520px] rounded-lg border pt-4">
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-2">
@@ -855,8 +865,12 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                         "px-4 py-2 rounded-full border-0 justify-start",
                         "cursor-pointer",
                         "transition-colors duration-300",
-                        "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
+                        "bg-primary hover:opacity-75 hover:bg-primary text-white dark:text-white justify-center",
+                        commands.length >= 5 &&
+                          !isEditing &&
+                          "opacity-50 cursor-not-allowed",
                       )}
+                      disabled={commands.length >= 5 && !isEditing}
                     >
                       {isEditing ? (
                         <>
@@ -873,10 +887,10 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                         type="button"
                         variant="outline"
                         className={cn(
-                          "px-4 py-2 rounded-full border-0 justify-start",
+                          "px-4 py-2 rounded-full border justify-start",
                           "cursor-pointer",
                           "transition-colors duration-300",
-                          "bg-accent hover:bg-primary hover:text-white dark:text-white justify-center",
+                          "bg-background hover:bg-accent hover:text-accent-foreground dark:text-white justify-center",
                         )}
                         onClick={handleCancel}
                       >
@@ -889,7 +903,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="test" className="h-full">
+          <TabsContent value="test" className="h-[520px]">
             <CommandTestTab command={currentCommand} category={category} />
           </TabsContent>
         </Tabs>
@@ -914,7 +928,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              className="text-white rounded-full hover:bg-gray-100 hover:text-black"
+              className="text-white rounded-full hover:bg-primary hover:opacity-75"
             >
               Delete
             </AlertDialogAction>

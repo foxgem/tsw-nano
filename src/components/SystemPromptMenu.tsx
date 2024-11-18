@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { loadCommandsFromStorage } from "~utils/commons";
 import type { Command } from "~utils/types";
 import styles from "../css/promptselect.module.css";
-import { loadCommandsFromStorage } from "~utils/commons";
 import {
   Select,
   SelectContent,

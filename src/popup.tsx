@@ -10,7 +10,7 @@ function ContentWrapper() {
   const location = useLocation();
 
   const containerClass =
-    location.pathname === "/" ? "w-[350px]" : "w-[800px] h-[600px]";
+    location.pathname === "/" ? "w-[350px]" : "w-[750px] h-[600px]";
 
   return (
     <div className={containerClass}>

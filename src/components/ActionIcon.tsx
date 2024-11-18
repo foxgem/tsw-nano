@@ -315,6 +315,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           strokeLinejoin="round"
           className="lucide lucide-chevron-down"
         >
+          <title>{name} icon</title>
           <path d="m6 9 6 6 6-6" />
         </svg>
       )}

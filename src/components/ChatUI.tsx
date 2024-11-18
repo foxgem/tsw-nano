@@ -16,12 +16,12 @@ import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import { cn, upperCaseFirstLetter } from "~/utils/commons";
 import { nanoPrompt, pageRagPrompt, summariseLongContext } from "~utils/ai";
+import type { Command, LMOptions } from "~utils/types";
 import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
 import SystemPromptMenu from "./SystemPromptMenu";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
-import type { Command, LMOptions } from "~utils/types";
 
 marked.setOptions({
   breaks: true,
