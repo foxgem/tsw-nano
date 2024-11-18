@@ -34,6 +34,7 @@
   font-size: 14px;
   max-width: 200px;
   max-height: 300px;
+  width: 100%;
   overflow-y: auto !important;
   z-index: 4000000 !important;
   margin-right: 10px;
@@ -55,23 +56,29 @@
   display: flex;
   align-items: center;
   position: relative;
-  max-width: 170px;
+  max-width: 200px;
   @apply relative cursor-default select-none py-1.5 pl-8 pr-2 text-sm outline-none;
 }
 
-.tswPromptItem option,
-#selectContent {
+.tswPromptItem:hover {
+  background-color: #f1f5f9 !important;
+  color: #3b82f6 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.tswPromptItem span:nth-of-type(1) {
+  width: 16px;
+}
+
+.tswPromptItem span:nth-of-type(1) svg {
+  width: 16px;
+}
+
+.tswPromptItem span:nth-of-type(2) {
   width: 100px;
   display: block;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  border: 1px solid red;
-}
-
-.tswPromptItem:hover {
-  background-color: #f1f5f9;
-  color: #3b82f6;
-  border: 0;
-  border-radius: 0;
 }

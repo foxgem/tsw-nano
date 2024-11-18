@@ -15,28 +15,28 @@ import {
 } from "./ui/dropdown-menu";
 
 interface Props {
-  category: string;
   selectedText: string;
   position: { x: number; y: number };
   onSelect: (action: Command) => void;
   onTranslate: () => void;
 }
 export default function TextSelectionMenu({
-  category,
   selectedText,
   onSelect,
   position,
   onTranslate,
 }: Props) {
   const [commands, setCommands] = useState<Command[]>([]);
-  useEffect(() => {
-    const loadCommands = async () => {
-      const commands = await loadCommandsFromStorage(category);
-      setCommands(commands);
-    };
+  const [isLoading, setIsLoading] = useState(false);
+  const loadCommands = async () => {
+    console.log("#####", isLoading);
+    if (isLoading) return;
+    setIsLoading(true);
+    const loadedCommands = await loadCommandsFromStorage("quick-actions");
+    setCommands(loadedCommands);
 
-    loadCommands();
-  }, [category]);
+    setIsLoading(false);
+  };
 
   const handleMenuItemClick = (menuItem: Command) => {
     onSelect(menuItem);
@@ -45,6 +45,12 @@ export default function TextSelectionMenu({
   const handleTranslateClick = () => {
     onTranslate();
   };
+
+  useEffect(() => {
+    if (selectedText) {
+      loadCommands();
+    }
+  }, [selectedText]);
 
   if (!selectedText) return null;
 
