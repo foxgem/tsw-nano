@@ -16,22 +16,29 @@ interface Props {
   category: string;
   onSelect: (action: Command) => void;
 }
+
+const defaultCommand: Command = {
+  name: "Default",
+  nano: "languageModel",
+  options: {},
+};
+
 export default function SystemPromptMenu({ category, onSelect }: Props) {
   const [commands, setCommands] = useState<Command[]>([]);
   const [currentCommand, setCurrentCommand] = useState<string>();
+
   useEffect(() => {
     const loadCommands = async () => {
       const commands = await loadCommandsFromStorage(category);
+      commands.unshift(defaultCommand);
       setCommands(commands);
       setCurrentCommand(commands[0].name);
-      console.log(commands);
     };
 
     loadCommands();
   }, [category]);
 
   const handleselectItemClick = (selectItem: string) => {
-    console.log("con---", selectItem);
     setCurrentCommand(selectItem);
 
     const selectedCommand = commands.find((cmd) => cmd.name === selectItem);
