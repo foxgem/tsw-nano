@@ -139,6 +139,7 @@ export const nanoPrompt = async (
   }
 };
 
+// the prompt here is inspired by: https://github.com/continuedev/continue/blob/main/core/llm/templates/edit/claude.ts
 export const predictNextInput = async (text: string) => {
   const systemPrompt = `You are an input text completion model. The user is currently editing the following text:
     ${text}[BLANK]
