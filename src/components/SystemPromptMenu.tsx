@@ -1,17 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ActionIcon } from "~/components/ActionIcon";
-import { Button } from "~/components/ui/button";
 import type { Command } from "~utils/types";
 import styles from "../css/promptselect.module.css";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import { loadCommandsFromStorage } from "~utils/commons";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface Props {
   category: string;
@@ -19,23 +18,53 @@ interface Props {
 }
 export default function SystemPromptMenu({ category, onSelect }: Props) {
   const [commands, setCommands] = useState<Command[]>([]);
+  const [currentCommand, setCurrentCommand] = useState<string>();
   useEffect(() => {
     const loadCommands = async () => {
       const commands = await loadCommandsFromStorage(category);
       setCommands(commands);
+      setCurrentCommand(commands[0].name);
+      console.log(commands);
     };
 
     loadCommands();
   }, [category]);
 
-  const handleMenuItemClick = (menuItem: Command) => {
-    console.log("con---", menuItem);
-    onSelect(menuItem);
+  const handleselectItemClick = (selectItem: string) => {
+    console.log("con---", selectItem);
+    setCurrentCommand(selectItem);
+
+    const selectedCommand = commands.find((cmd) => cmd.name === selectItem);
+    if (selectedCommand) {
+      onSelect(selectedCommand);
+    }
   };
 
   return (
     <div className={styles.tswMenuContainer}>
-      <DropdownMenu>
+      {currentCommand && (
+        <Select
+          value={currentCommand}
+          onValueChange={(value) => handleselectItemClick(value)}
+        >
+          <SelectTrigger className={styles.tswTriggerButton}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className={styles.tswPromptList}>
+            {commands.map((option) => (
+              <SelectItem
+                key={option.name}
+                value={option.name}
+                className={styles.tswPromptItem}
+              >
+                {option.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+
+      {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className={styles.tswTriggerButton}>
             System Prompt <ActionIcon name="Dropdown" />
@@ -43,17 +72,17 @@ export default function SystemPromptMenu({ category, onSelect }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent className={styles.tswPromptList}>
           {commands.map((command) => (
-            <DropdownMenuItem
+            <DropdownselectItem
               key={command.name}
               className={styles.tswPromptItem}
             >
-              <Button onClick={() => handleMenuItemClick(command)}>
+              <Button onClick={() => handleselectItemClick(command)}>
                 {command.name}
               </Button>
-            </DropdownMenuItem>
+            </DropdownselectItem>
           ))}
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
     </div>
   );
 }
