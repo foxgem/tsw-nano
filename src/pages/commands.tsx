@@ -347,7 +347,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                         </label>
                         <Textarea
                           id="systemPrompt"
-                          className="w-full rounded  text-sm placeholder:text-sm"
+                          className="w-full rounded  text-sm placeholder:text-sm h-[150px]"
                           placeholder="Enter system prompt"
                           value={
                             (currentCommand.options as LMOptions)
@@ -430,7 +430,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                         </label>
                         <Textarea
                           id="summarizerContext"
-                          className="w-full rounded  text-sm placeholder:text-sm"
+                          className="w-full rounded  text-sm placeholder:text-sm h-[150px]"
                           placeholder="Enter shared context"
                           value={
                             (currentCommand.options as SummarizerOptions)
@@ -848,6 +848,12 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                           </Select>
                         </div>
                       </div>
+                    </div>
+                  )}
+                  {}
+                  {5 - commands.length > 0 && (
+                    <div className="font-bold flex justify-end">
+                      Left: {5 - commands.length}
                     </div>
                   )}
 
