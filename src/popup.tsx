@@ -1,9 +1,13 @@
-import { Route, MemoryRouter as Router, Routes } from "react-router-dom";
+import {
+  Route,
+  MemoryRouter as Router,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
 import CommandManager from "./pages/commands";
 import MainPage from "./pages/home";
 
-import { useLocation } from "react-router-dom";
 import "./css/extention.css";
 
 function ContentWrapper() {

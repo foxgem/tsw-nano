@@ -4,7 +4,7 @@ import { StreamMessage } from "~/components/StreamMessage";
 import type { Command, NanoApi } from "./types";
 
 const checkNanoAvailability = async (api: NanoApi) => {
-  if (!window.ai || !window.ai[api]) {
+  if (!window.ai?.[api]) {
     throw new Error("Nano is not available");
   }
 

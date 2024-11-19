@@ -51,7 +51,7 @@ type Message = {
 };
 
 export interface ChatUIProps {
-  pageText: string;
+  readonly pageText: string;
 }
 
 export function ChatUI({ pageText }: ChatUIProps) {
@@ -123,18 +123,16 @@ export function ChatUI({ pageText }: ChatUIProps) {
         const baseMessages = customMessages || messages;
 
         // Only add a new user message if we're not editing
-        const newMessages = (
-          customMessages
-            ? baseMessages
-            : [
-                ...baseMessages,
-                {
-                  content: currentMessage,
-                  role: "user",
-                  id: baseMessages.length,
-                },
-              ]
-        ) as Message[];
+        const newMessages = customMessages
+          ? baseMessages
+          : ([
+              ...baseMessages,
+              {
+                content: currentMessage,
+                role: "user",
+                id: baseMessages.length,
+              },
+            ] as Message[]);
 
         setInputValue("");
         const textarea = document.getElementById("tsw-chat-textarea");
@@ -298,7 +296,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
                       </div>
                     ) : (
                       <StreamMessage
-                        outputString={m.content as string}
+                        outputString={m.content}
                         onStreamComplete={(isComplete) => {
                           setMessages((prev) =>
                             prev.map((msg) =>
@@ -378,7 +376,10 @@ export function ChatUI({ pageText }: ChatUIProps) {
               // Auto-resize the textarea
               const textarea = e.target as HTMLTextAreaElement;
               textarea.style.height = "auto";
-              textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`; // Set maximum height to 200px
+              textarea.style.height = `${Math.min(
+                textarea.scrollHeight,
+                200,
+              )}px`; // Set maximum height to 200px
             }}
             placeholder={
               editingMessageId !== null

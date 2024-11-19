@@ -6,7 +6,7 @@ import githubLight from "data-base64:/assets/github_light.svg";
 import { GITHUB_ROOT } from "~/utils/constants";
 
 interface FooterProps {
-  className?: string;
+  readonly className?: string;
 }
 
 export default function Footer({ className }: FooterProps) {

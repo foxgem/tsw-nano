@@ -10,7 +10,7 @@ interface StreamMessageProps {
 export function StreamMessage({
   outputString,
   onStreamComplete,
-}: StreamMessageProps) {
+}: Readonly<StreamMessageProps>) {
   const animatedText = useAnimatedText(outputString);
   const [parsedText, setParsedText] = useState("");
 

@@ -10,7 +10,11 @@ export interface PanelProps {
   onRender?: () => void;
 }
 
-export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
+export function TSWPanel({
+  title,
+  placeHolder,
+  onRender,
+}: Readonly<PanelProps>) {
   useEffect(() => {
     if (onRender) {
       onRender();
