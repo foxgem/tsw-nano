@@ -25,7 +25,7 @@ export default function TextSelectionMenu({
   onSelect,
   position,
   onTranslate,
-}: Props) {
+}: Readonly<Props>) {
   const [commands, setCommands] = useState<Command[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const loadCommands = async () => {

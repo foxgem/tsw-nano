@@ -1,10 +1,10 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { TSWChattingPanel } from "~components/TSWChattingPanel";
+import type { Command } from "~utils/types";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
 import { callNanoModel, summarise, translate } from "./utils/ai";
-import type { Command } from "~utils/types";
 
 function withOutputPanel(
   outputElm: string,

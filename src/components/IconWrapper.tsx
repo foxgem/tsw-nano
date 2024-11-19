@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 
 interface IconProps {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }
 
 export default function IconWrapper({ children }: IconProps) {

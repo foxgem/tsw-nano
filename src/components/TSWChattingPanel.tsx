@@ -11,7 +11,10 @@ export interface ChattingPanelProps {
   onRender: () => void;
 }
 
-export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
+export function TSWChattingPanel({
+  pageText,
+  onRender,
+}: Readonly<ChattingPanelProps>) {
   useEffect(() => {
     if (onRender) {
       onRender();

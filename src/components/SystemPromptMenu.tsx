@@ -23,7 +23,10 @@ const defaultCommand: Command = {
   options: {},
 };
 
-export default function SystemPromptMenu({ category, onSelect }: Props) {
+export default function SystemPromptMenu({
+  category,
+  onSelect,
+}: Readonly<Props>) {
   const [commands, setCommands] = useState<Command[]>([]);
   const [currentCommand, setCurrentCommand] = useState<string>();
 

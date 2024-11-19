@@ -16,7 +16,7 @@ export default function Layout({
   children,
   headerRightElement,
   footerPosition,
-}: LayoutProps) {
+}: Readonly<LayoutProps>) {
   const navigate = useNavigate();
   return (
     <div className="w-[350px] min-h-[296px] max-h-[600px]">
@@ -27,7 +27,7 @@ export default function Layout({
         <div className="flex-grow text-center">
           <p className="font-bold text-sm">{title}</p>
         </div>
-        {headerRightElement ? headerRightElement : <div className="w-10" />}
+        {headerRightElement || <div className="w-10" />}
       </div>
       <div className="px-5"> {children}</div>
 
