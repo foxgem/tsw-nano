@@ -10,7 +10,7 @@ const checkNanoAvailability = async (api: NanoApi) => {
 
   if ("capabilities" in window.ai[api]) {
     const { available } = await window.ai[api].capabilities();
-    if (available !== "readily") {
+    if (available === "no") {
       throw new Error("Nano is not available");
     }
   }
