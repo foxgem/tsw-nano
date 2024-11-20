@@ -29,15 +29,7 @@ marked.setOptions({
 
 const preparePageRagPrompt = async (pageText: string) => {
   if (pageText.length >= 30000) {
-    const cacheKey = `summarized_${window.location.pathname}`;
-    const cached = sessionStorage.getItem(cacheKey);
-
-    if (cached) {
-      return pageRagPrompt(cached);
-    }
-
     const summarized = await summariseLongContext(pageText);
-    sessionStorage.setItem(cacheKey, summarized);
     return pageRagPrompt(summarized);
   }
 

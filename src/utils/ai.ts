@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
 import type { Command, NanoApi } from "./types";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 const checkNanoAvailability = async (api: NanoApi) => {
   if (!window.ai?.[api]) {
@@ -77,42 +78,42 @@ export const pageRagPrompt = (context: string) => {
 
 export const summarise = async (text: string, messageElement: HTMLElement) => {
   const root = createRoot(messageElement);
-  try {
-    if (text.length > 4096) {
-      console.log(text.length);
-      throw new Error("Text is too long for summarization");
-    }
-
-    await checkNanoAvailability("summarizer");
-    const summarizer = await window.ai.summarizer.create({
-      sharedContext:
-        "Keep the summary concise and relevant to the text without providing unnecessary information and explanations.",
-      type: "key-points",
-      length: "short",
-    });
-
-    const summary = await summarizer.summarize(text);
-    root.render(React.createElement(StreamMessage, { outputString: summary }));
-  } catch (e) {
-    root.render(
-      React.createElement(StreamMessage, { outputString: e.message }),
-    );
-  }
+  const summary = await summariseLongContext(text);
+  root.render(React.createElement(StreamMessage, { outputString: summary }));
 };
 
 export const summariseLongContext = async (text: string) => {
-  try {
-    await checkNanoAvailability("summarizer");
-    const summarizer = await window.ai.summarizer.create({
-      format: "plain-text",
-      length: "long",
-    });
-    const summary = await summarizer.summarize(text);
-    return summary;
-  } catch (e) {
-    console.error(e);
-    return e.message;
+  const cacheKey = `summarized_${window.location.pathname}`;
+  const cached = sessionStorage.getItem(cacheKey);
+
+  if (cached) {
+    return cached;
   }
+
+  await checkNanoAvailability("summarizer");
+  const summarizer = await window.ai.summarizer.create({
+    type: "key-points",
+    length: "short",
+  });
+
+  let summary = "";
+  const textSplitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 4096,
+    chunkOverlap: 0,
+  });
+  const results = await textSplitter.splitText(text);
+  for (const result of results) {
+    console.log(result);
+    try {
+      summary += await summarizer.summarize(result);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  sessionStorage.setItem(cacheKey, summary);
+
+  return summary;
 };
 
 export const nanoPrompt = async (
