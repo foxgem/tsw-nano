@@ -24,6 +24,7 @@ import {
 } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
 import CommandTestTab from "~components/CommandTestTab";
+import { Slider } from "~components/ui/slider";
 import { Tabs, TabsContent, TabsList } from "~components/ui/tabs";
 import { cn } from "~utils/commons";
 import {
@@ -377,24 +378,35 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                           <label className="text-sm font-medium" htmlFor="topK">
                             Top K
                           </label>
-                          <Input
-                            id="topK"
-                            type="number"
-                            max="8"
-                            value={
-                              (currentCommand.options as LMOptions).topK || 1
-                            }
-                            onChange={(e) =>
-                              setCurrentCommand({
-                                ...currentCommand,
-                                options: {
-                                  ...(currentCommand.options as LMOptions),
-                                  topK: Number.parseInt(e.target.value),
-                                },
-                              })
-                            }
-                            className={cn("bg-white text-black")}
-                          />
+                          <div className="flex items-center justify-between gap-2">
+                            <Slider
+                              id="topK"
+                              defaultValue={[
+                                (currentCommand.options as LMOptions).topK || 1,
+                              ]}
+                              max={8}
+                              step={1}
+                              onChange={(e) => {
+                                console.log(e, e.target.value);
+                                setCurrentCommand({
+                                  ...currentCommand,
+                                  options: {
+                                    ...(currentCommand.options as LMOptions),
+                                    topK: Number.parseInt(e.target.value),
+                                  },
+                                });
+                              }}
+                            />
+                            <Input
+                              disabled={true}
+                              value={
+                                (currentCommand.options as LMOptions).topK || 1
+                              }
+                              className={cn(
+                                "bg-white text-black w-10 rounded  text-center",
+                              )}
+                            />
+                          </div>
                         </div>
                         <div>
                           <label
@@ -403,28 +415,39 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                           >
                             Temperature
                           </label>
-                          <Input
-                            id="temperature"
-                            type="number"
-                            step="0.1"
-                            max="2"
-                            value={
-                              (currentCommand.options as LMOptions)
-                                .temperature || 0.7
-                            }
-                            onChange={(e) =>
-                              setCurrentCommand({
-                                ...currentCommand,
-                                options: {
-                                  ...(currentCommand.options as LMOptions),
-                                  temperature: Number.parseFloat(
-                                    e.target.value,
-                                  ),
-                                },
-                              })
-                            }
-                            className={cn("bg-white", "text-black")}
-                          />
+                          <div className="flex items-center justify-between gap-2">
+                            <Slider
+                              id="temperature"
+                              defaultValue={[
+                                (currentCommand.options as LMOptions)
+                                  .temperature || 0.1,
+                              ]}
+                              max={2}
+                              step={0.1}
+                              onChange={(e) => {
+                                console.log(e, e.target.value);
+                                setCurrentCommand({
+                                  ...currentCommand,
+                                  options: {
+                                    ...(currentCommand.options as LMOptions),
+                                    temperature: Number.parseFloat(
+                                      e.target.value,
+                                    ),
+                                  },
+                                });
+                              }}
+                            />
+                            <Input
+                              disabled={true}
+                              value={
+                                (currentCommand.options as LMOptions)
+                                  .temperature || 0.1
+                              }
+                              className={cn(
+                                "bg-white text-black w-10 px-2 rounded text-center",
+                              )}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
