@@ -85,7 +85,7 @@ export async function translateSelected(
   withOutputPanel(outputElm, "Thinking", "Nano", async () => {
     const element = document.getElementById("tsw-output-body");
     if (textSelected) {
-      await translate(textSelected, "en", "zh", element);
+      await translate(textSelected, "zh", element);
     }
   });
 }

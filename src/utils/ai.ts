@@ -152,7 +152,6 @@ export const predictNextInput = async (text: string) => {
 
 export async function translate(
   text: string,
-  sourceLanguage: string,
   targetLanguage: string,
   messageElement: HTMLElement,
 ) {
@@ -160,8 +159,12 @@ export async function translate(
   try {
     if (
       "translation" in window &&
-      "createTranslator" in (window.translation as any)
+      "createTranslator" in (window.translation as any) &&
+      "canDetect" in (window.translation as any)
     ) {
+      const langDetector = await (window.translation as any).createDetector();
+      const detectResult = await (langDetector as any).detect(text);
+      const sourceLanguage = detectResult[0].detectedLanguage;
       const translator = await (window.translation as any).createTranslator({
         sourceLanguage,
         targetLanguage,
@@ -171,7 +174,7 @@ export async function translate(
         React.createElement(StreamMessage, {
           outputString: `
         ${text}
-        ------ translation ------
+        ---${sourceLanguage}--- to -->${targetLanguage}---
         ${result}
         `,
         }),
