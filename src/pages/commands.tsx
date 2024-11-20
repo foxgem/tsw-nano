@@ -123,8 +123,8 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
     if (command.nano === "languageModel") {
       const { topK, temperature } = command.options as LMOptions;
       if (topK < 1 || topK > 8) return "Top-K must be between 1 and 8";
-      if (temperature < 0.1)
-        return "Temperature must be greater than or equal to 0.1";
+      if (temperature < 0.1 || temperature > 2)
+        return "Temperature must be between 0.1 and 2";
       if ((topK && !temperature) || (!topK && temperature)) {
         return "Both Top-K and Temperature must be provided if one is set";
       }
@@ -398,6 +398,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                             id="temperature"
                             type="number"
                             step="0.1"
+                            max="2"
                             value={
                               (currentCommand.options as LMOptions)
                                 .temperature || 0.7
