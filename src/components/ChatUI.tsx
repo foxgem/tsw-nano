@@ -28,12 +28,14 @@ marked.setOptions({
 });
 
 const preparePageRagPrompt = async (pageText: string) => {
-  const cacheKey = `summarized_${window.location.pathname}`;
-  const cached = sessionStorage.getItem(cacheKey);
-
-  if (cached) return cached;
-
   if (pageText.length >= 30000) {
+    const cacheKey = `summarized_${window.location.pathname}`;
+    const cached = sessionStorage.getItem(cacheKey);
+
+    if (cached) {
+      return pageRagPrompt(cached);
+    }
+
     const summarized = await summariseLongContext(pageText);
     sessionStorage.setItem(cacheKey, summarized);
     return pageRagPrompt(summarized);
@@ -61,7 +63,11 @@ export function ChatUI({ pageText }: ChatUIProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortController = useRef<AbortController | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
-  const [systemPrompt, setSystemPrompt] = useState<Command>();
+  const [systemPrompt, setSystemPrompt] = useState<Command>({
+    name: "Default",
+    nano: "languageModel",
+    options: {},
+  });
 
   const { toast } = useToast();
 

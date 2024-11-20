@@ -29,7 +29,6 @@ export default function TextSelectionMenu({
   const [commands, setCommands] = useState<Command[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const loadCommands = async () => {
-    console.log("#####", isLoading);
     if (isLoading) return;
     setIsLoading(true);
     const loadedCommands = await loadCommandsFromStorage("quick-actions");
