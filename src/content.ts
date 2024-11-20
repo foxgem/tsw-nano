@@ -82,7 +82,7 @@ createSelectMenu();
 function createFloatingTogglePanel() {
   const panel = document.createElement("div");
   panel.id = "tsw-toggle-panel";
-  const zIndexValue = window.location.hostname === "vercel.com" ? 39 : 3999999;
+  const zIndexValue = window.location.hostname === "vercel.com" ? 80 : 3999999;
 
   panel.style.cssText = `
     all: initial;

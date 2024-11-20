@@ -40,7 +40,7 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({
   return (
     <Card className="h-full pt-4">
       <CardContent>
-        <div className="border rounded p-4 text-sm font-medium">
+        <div className="border rounded p-4 text-sm font-medium text-black">
           <div>Name: {command.name}</div>
 
           <div>
@@ -157,7 +157,7 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({
               value={testContent}
               placeholder="Input test content"
               onChange={(e) => setTestContent(e.target.value)}
-              className="flex-1 px-4 py-2 rounded border bg-background text-sm placeholder:text-sm"
+              className="flex-1 px-4 py-2 rounded border bg-white text-sm placeholder:text-sm text-black"
             />
             <Button
               className={cn(

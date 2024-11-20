@@ -222,7 +222,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
               "px-4 py-2 rounded-full border-0 justify-start",
               "cursor-pointer",
               "transition-colors duration-300 w-full",
-              "bg-primary hover:opacity-75 hover:bg-primary text-white dark:text-white justify-center",
+              "bg-primary hover:opacity-75 hover:bg-primary text-white justify-center",
               commands.length >= 5 && "opacity-50 cursor-not-allowed",
             )}
             disabled={commands.length >= 5}
@@ -234,7 +234,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
             <Plus className="w-4 h-4 mr-2" /> New
           </Button>
         </div>
-        <div className="space-y-2 overflow-y-auto h-[500px]">
+        <div className="space-y-2 overflow-y-auto h-[500px] text-black">
           {commands.map((command) => (
             <div
               key={command.name}
@@ -257,7 +257,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-red-500"
+                  className="h-8 w-8 text-red-500 dark:hover:bg-[#D1D5DB] hover:rounded-full"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDelete(command);
@@ -297,6 +297,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                       </label>
                       <Input
                         id="commandName"
+                        className={cn("bg-white text-black")}
                         placeholder={"Enter name"}
                         value={currentCommand?.name || ""}
                         onChange={(e) =>
@@ -322,12 +323,19 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                           });
                         }}
                       >
-                        <SelectTrigger id="nanoType">
+                        <SelectTrigger
+                          id="nanoType"
+                          className={cn("text-black")}
+                        >
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white">
                           {NANOTYPE_OPTIONS[category].map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
+                            <SelectItem
+                              key={option.value}
+                              value={option.value}
+                              className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
+                            >
                               {option.label}
                             </SelectItem>
                           ))}
@@ -347,7 +355,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                         </label>
                         <Textarea
                           id="systemPrompt"
-                          className="w-full rounded  text-sm placeholder:text-sm h-[150px]"
+                          className="w-full rounded  text-sm placeholder:text-sm h-[150px] bg-white text-black"
                           placeholder="Enter system prompt"
                           value={
                             (currentCommand.options as LMOptions)
@@ -385,6 +393,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                                 },
                               })
                             }
+                            className={cn("bg-white text-black")}
                           />
                         </div>
                         <div>
@@ -414,6 +423,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                                 },
                               })
                             }
+                            className={cn("bg-white", "text-black")}
                           />
                         </div>
                       </div>
@@ -431,7 +441,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                         </label>
                         <Textarea
                           id="summarizerContext"
-                          className="w-full rounded  text-sm placeholder:text-sm h-[150px]"
+                          className="w-full rounded  text-sm placeholder:text-sm h-[150px] bg-white text-black"
                           placeholder="Enter shared context"
                           value={
                             (currentCommand.options as SummarizerOptions)
@@ -471,14 +481,18 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                               })
                             }
                           >
-                            <SelectTrigger id="summarizerType">
+                            <SelectTrigger
+                              id="summarizerType"
+                              className="text-black"
+                            >
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white text-black">
                               {SUMMARIZER_TYPE_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
                                   value={option.value}
+                                  className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
                                 >
                                   {option.label}
                                 </SelectItem>
@@ -508,14 +522,18 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                               })
                             }
                           >
-                            <SelectTrigger id="summarizerFormat">
+                            <SelectTrigger
+                              id="summarizerFormat"
+                              className="bg-white text-black"
+                            >
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white">
                               {FORMAT_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
                                   value={option.value}
+                                  className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
                                 >
                                   {option.label}
                                 </SelectItem>
@@ -545,12 +563,16 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                               })
                             }
                           >
-                            <SelectTrigger id="summarizerLength">
+                            <SelectTrigger
+                              id="summarizerLength"
+                              className="bg-white text-black"
+                            >
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white">
                               {LENGTH_OPTIONS.map((option) => (
                                 <SelectItem
+                                  className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
                                   key={option.value}
                                   value={option.value}
                                 >
@@ -618,7 +640,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                             <SelectTrigger id="writerTone">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white">
                               {WRITER_TONE_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
@@ -655,7 +677,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                             <SelectTrigger id="writerFormat">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white">
                               {FORMAT_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
@@ -692,7 +714,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                             <SelectTrigger id="writerLength">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white">
                               {LENGTH_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
@@ -762,7 +784,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                             <SelectTrigger id="rewriterTone">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white">
                               {REWRITER_TONE_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
@@ -799,7 +821,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                             <SelectTrigger id="rewriterFormat">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white">
                               {REWRITER_FORMAT_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
@@ -836,7 +858,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                             <SelectTrigger id="rewriterLength">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white">
                               {REWRITER_LENGTH_OPTIONS.map((option) => (
                                 <SelectItem
                                   key={option.value}
@@ -897,7 +919,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
                           "px-4 py-2 rounded-full border justify-start",
                           "cursor-pointer",
                           "transition-colors duration-300",
-                          "bg-background hover:bg-accent hover:text-accent-foreground dark:text-white justify-center",
+                          "bg-white hover:bg-accent hover:text-accent-foreground text-black justify-center",
                         )}
                         onClick={handleCancel}
                       >
@@ -918,7 +940,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className="text-black">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -929,7 +951,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
           <AlertDialogFooter>
             <AlertDialogCancel
               onClick={() => setShowDeleteDialog(false)}
-              className="rounded-full"
+              className="rounded-full hover:text-white"
             >
               Cancel
             </AlertDialogCancel>

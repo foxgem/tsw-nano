@@ -79,25 +79,27 @@ export default function TextSelectionMenu({
             <ActionIcon name="Menu" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className={styles.tswActionList}
-          side="bottom"
-          align="start"
-          sideOffset={5}
-          alignOffset={-5}
-        >
-          {commands.map((command) => (
-            <DropdownMenuItem
-              key={command.name}
-              className={styles.tswActionItem}
-            >
-              <Button onClick={() => handleMenuItemClick(command)}>
-                {" "}
-                {command.name}
-              </Button>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
+        {commands.length > 0 && (
+          <DropdownMenuContent
+            className={styles.tswActionList}
+            side="bottom"
+            align="start"
+            sideOffset={5}
+            alignOffset={-5}
+          >
+            {commands.map((command) => (
+              <DropdownMenuItem
+                key={command.name}
+                className={styles.tswActionItem}
+              >
+                <Button onClick={() => handleMenuItemClick(command)}>
+                  {" "}
+                  {command.name}
+                </Button>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        )}
       </DropdownMenu>
     </div>
   );
