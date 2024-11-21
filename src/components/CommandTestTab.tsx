@@ -1,3 +1,4 @@
+import { marked } from "marked";
 import { useState } from "react";
 import { callNanoModel } from "~utils/ai";
 import { cn } from "~utils/commons";
@@ -21,6 +22,7 @@ import type {
 } from "~utils/types";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
+import { Textarea } from "./ui/textarea";
 
 interface CommandTestTabProps {
   command: Command;
@@ -38,126 +40,195 @@ const CommandTestTab: React.FC<CommandTestTabProps> = ({
   };
 
   return (
-    <Card className="h-full pt-4">
-      <CardContent>
-        <div className="border rounded p-4 text-sm font-medium text-black">
-          <div>Name: {command.name}</div>
-
-          <div>
-            Type: {findLabelByValue(NANOTYPE_OPTIONS[category], command.nano)}
+    <Card className="pt-4 h-full overflow-scroll">
+      <CardContent className="px-4">
+        <div className="text-sm font-medium text-black border-b pb-2">
+          <div className="grid grid-cols-2 gap-2">
+            {command.name && (
+              <div className="mb-2">
+                <span className="p-1">{command.name}</span>
+              </div>
+            )}
+            <div className="mb-2">
+              <span className="p-1">
+                {findLabelByValue(NANOTYPE_OPTIONS[category], command.nano)}
+              </span>
+            </div>
           </div>
           {command.nano === "languageModel" && (
             <>
-              <div className="break-all">
-                System Prompt: {(command.options as LMOptions).systemPrompt}
-              </div>
+              {(command.options as LMOptions).systemPrompt && (
+                <div className="break-all">
+                  System Prompt:
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: marked(
+                        (command.options as LMOptions).systemPrompt,
+                      ),
+                    }}
+                    className="my-2 p-4 border rounded markdownContainer"
+                  />
+                </div>
+              )}
               <div className="grid  grid-cols-2 gap-2 ">
-                <div>Top K: {(command.options as LMOptions).topK}</div>
                 <div>
-                  Temperature: {(command.options as LMOptions).temperature}
+                  Top K:{" "}
+                  <span className="p-1">
+                    {(command.options as LMOptions).topK}
+                  </span>
+                </div>
+                <div>
+                  Temperature:{" "}
+                  <span className="p-1">
+                    {(command.options as LMOptions).temperature}
+                  </span>
                 </div>
               </div>
             </>
           )}
           {command.nano === "summarizer" && (
             <>
-              <div>
-                Shared Context:
-                {(command.options as SummarizerOptions).sharedContext}
-              </div>
-              <div className="grid  grid-cols-2 gap-2 ">
+              {(command.options as SummarizerOptions).sharedContext && (
+                <div className="break-all">
+                  Shared Context:
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: marked(
+                        (command.options as SummarizerOptions).sharedContext,
+                      ),
+                    }}
+                    className="my-2 p-4 border rounded markdownContainer"
+                  />
+                </div>
+              )}
+              <div className="grid  grid-cols-3 gap-2 ">
                 <div>
                   Type:
-                  {findLabelByValue(
-                    SUMMARIZER_TYPE_OPTIONS,
-                    (command.options as SummarizerOptions).type,
-                  )}
+                  <span className="p-1">
+                    {findLabelByValue(
+                      SUMMARIZER_TYPE_OPTIONS,
+                      (command.options as SummarizerOptions).type,
+                    )}
+                  </span>
                 </div>
                 <div>
                   Format:
-                  {findLabelByValue(
-                    FORMAT_OPTIONS,
-                    (command.options as SummarizerOptions).format,
-                  )}
+                  <span className="p-1">
+                    {findLabelByValue(
+                      FORMAT_OPTIONS,
+                      (command.options as SummarizerOptions).format,
+                    )}
+                  </span>
                 </div>
                 <div>
                   Length:
-                  {findLabelByValue(
-                    FORMAT_OPTIONS,
-                    (command.options as SummarizerOptions).length,
-                  )}
+                  <span className="p-1">
+                    {findLabelByValue(
+                      FORMAT_OPTIONS,
+                      (command.options as SummarizerOptions).length,
+                    )}
+                  </span>
                 </div>
               </div>
             </>
           )}
           {command.nano === "writer" && (
             <>
-              <div>
-                Shared Context:
-                {(command.options as WriterOptions).sharedContext}
-              </div>
+              {(command.options as WriterOptions).sharedContext && (
+                <div className="break-all">
+                  Shared Context:
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: marked(
+                        (command.options as WriterOptions).sharedContext,
+                      ),
+                    }}
+                    className="my-2 p-4 border rounded markdownContainer"
+                  />
+                </div>
+              )}
               <div>
                 Tone:{" "}
-                {findLabelByValue(
-                  WRITER_TONE_OPTIONS,
-                  (command.options as WriterOptions).tone,
-                )}
+                <span className="p-1">
+                  {findLabelByValue(
+                    WRITER_TONE_OPTIONS,
+                    (command.options as WriterOptions).tone,
+                  )}
+                </span>
               </div>
               <div>
                 Format:
-                {findLabelByValue(
-                  FORMAT_OPTIONS,
-                  (command.options as WriterOptions).format,
-                )}
+                <span className="p-1">
+                  {findLabelByValue(
+                    FORMAT_OPTIONS,
+                    (command.options as WriterOptions).format,
+                  )}
+                </span>
               </div>
               <div>
                 Length:
-                {findLabelByValue(
-                  LENGTH_OPTIONS,
-                  (command.options as WriterOptions | RewriterOptions).length,
-                )}
+                <span className="p-1">
+                  {findLabelByValue(
+                    LENGTH_OPTIONS,
+                    (command.options as WriterOptions | RewriterOptions).length,
+                  )}
+                </span>
               </div>
             </>
           )}
 
           {command.nano === "rewriter" && (
             <>
+              {(command.options as RewriterOptions).sharedContext && (
+                <div className="break-all">
+                  Shared Context:
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: marked(
+                        (command.options as RewriterOptions).sharedContext,
+                      ),
+                    }}
+                    className="my-2 p-4 border rounded markdownContainer"
+                  />
+                </div>
+              )}
               <div>
-                Shared Context:
-                {(command.options as RewriterOptions).sharedContext}
-              </div>
-              <div>
-                Tone:{" "}
-                {findLabelByValue(
-                  REWRITER_TONE_OPTIONS,
-                  (command.options as RewriterOptions).tone,
-                )}
+                Tone:
+                <span className="p-1">
+                  {findLabelByValue(
+                    REWRITER_TONE_OPTIONS,
+                    (command.options as RewriterOptions).tone,
+                  )}
+                </span>
               </div>
               <div>
                 Format:
-                {findLabelByValue(
-                  REWRITER_FORMAT_OPTIONS,
-                  (command.options as RewriterOptions).format,
-                )}
+                <span className="p-1">
+                  {findLabelByValue(
+                    REWRITER_FORMAT_OPTIONS,
+                    (command.options as RewriterOptions).format,
+                  )}
+                </span>
               </div>
               <div>
                 Length:
-                {findLabelByValue(
-                  REWRITER_LENGTH_OPTIONS,
-                  (command.options as RewriterOptions).length,
-                )}
+                <span className="p-1">
+                  {findLabelByValue(
+                    REWRITER_LENGTH_OPTIONS,
+                    (command.options as RewriterOptions).length,
+                  )}
+                </span>
               </div>
             </>
           )}
         </div>
         <div className="space-y-4">
-          <div className="flex justify-center w-full mt-4 space-x-2">
-            <input
-              type="text"
+          <div className="flex justify-center items-center w-full mt-4 space-x-2">
+            <Textarea
               value={testContent}
               placeholder="Input test content"
               onChange={(e) => setTestContent(e.target.value)}
-              className="flex-1 px-4 py-2 rounded border bg-white text-sm placeholder:text-sm text-black"
+              className="flex-1 px-4 py-2 rounded border bg-white text-sm placeholder:text-sm text-black min-h-[58px] focus:border"
             />
             <Button
               className={cn(
