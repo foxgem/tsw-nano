@@ -95,6 +95,7 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
   const [selectedCommand, setSelectedCommand] = useState<Command | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [commandToDelete, setCommandToDelete] = useState<Command | null>(null);
+  const [activeTab, setActiveTab] = useState("settings");
 
   useEffect(() => {
     const loadCommands = async () => {
@@ -214,779 +215,795 @@ const CommandManager: React.FC<CommandManagerProps> = ({ category }) => {
 
   // Rest of the JSX remains identical
   return (
-    <div className="flex bg-gray-50">
-      {/* Left Panel */}
-      <div className="w-64 border-r bg-white p-4 ">
-        <div className="mb-4">
-          <Button
-            className={cn(
-              "px-4 py-2 rounded-full border-0 justify-start",
-              "cursor-pointer",
-              "transition-colors duration-300 w-full",
-              "bg-primary hover:opacity-75 hover:bg-primary text-white justify-center",
-              commands.length >= 5 && "opacity-50 cursor-not-allowed",
-            )}
-            disabled={commands.length >= 5}
-            onClick={() => {
-              handleCancel();
-              setSelectedCommand(null);
-            }}
-          >
-            <Plus className="w-4 h-4 mr-2" /> New
-          </Button>
+    <div className="bg-white">
+      <div className="flex justify-between items-center  border-b px-4 py-2 text-black">
+        <div className="text-2xl font-bold">
+          {category === "quick-actions" ? "Quick Actions" : "System Prompts"}
         </div>
-        <div className="space-y-2 overflow-y-auto h-[500px] text-black">
-          {commands.map((command) => (
-            <div
-              key={command.name}
-              className={`p-2 rounded cursor-pointer hover:bg-gray-100 ${
-                selectedCommand?.name === command.name ? "bg-gray-100" : ""
-              }`}
-              onClick={() => handleCommandSelect(command)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  handleCommandSelect(command);
-                }
-              }}
-              role="button"
-              tabIndex={0}
-            >
-              <div className="flex justify-between items-center">
-                <span className="truncate text-sm font-medium w-[190px]">
-                  {command.name}
-                </span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-red-500 dark:hover:bg-[#D1D5DB] hover:rounded-full"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(command);
-                  }}
-                >
-                  <Trash2 className="w-4 h-4 text-red hover:text-gray-500" />
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Button
+          className={cn(
+            "px-4 py-2 rounded-full border-0 justify-start",
+            "cursor-pointer",
+            "transition-colors duration-300 w-[100px]",
+            "bg-primary hover:opacity-75 hover:bg-primary text-white justify-center",
+            commands.length >= 5 && "opacity-50 cursor-not-allowed",
+          )}
+          disabled={commands.length >= 5}
+          onClick={() => {
+            handleCancel();
+            setSelectedCommand(null);
+            setActiveTab("settings");
+          }}
+        >
+          <Plus className="w-4 h-4 mr-2" /> New
+        </Button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-4">
-        <Tabs defaultValue="settings">
-          <TabsList>
-            <TabsTrigger value="settings" className={TABTRIGGER_STYLES}>
-              Setting
-            </TabsTrigger>
-            <TabsTrigger value="test" className={TABTRIGGER_STYLES}>
-              Test
-            </TabsTrigger>
-          </TabsList>
+      <div className="flex">
+        {/* Left Panel */}
+        <div className="w-64 border-r bg-white p-4 ">
+          <div className="space-y-2 overflow-y-auto text-black">
+            {commands.map((command) => (
+              <div
+                key={command.name}
+                className={`p-2 rounded cursor-pointer hover:bg-gray-100 ${
+                  selectedCommand?.name === command.name ? "bg-gray-100" : ""
+                }`}
+                onClick={() => handleCommandSelect(command)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleCommandSelect(command);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                <div className="flex justify-between items-center">
+                  <span className="truncate text-sm font-medium w-[190px]">
+                    {command.name}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-red-500 dark:hover:bg-[#D1D5DB] hover:rounded-full"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(command);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 text-red hover:text-gray-500" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-          <TabsContent value="settings">
-            <Card className="h-[520px] rounded-lg border pt-4">
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label
-                        className="text-sm font-medium"
-                        htmlFor="commandName"
-                      >
-                        Name
-                      </label>
-                      <Input
-                        id="commandName"
-                        className={cn("bg-white text-black")}
-                        placeholder={"Enter name"}
-                        value={currentCommand?.name || ""}
-                        onChange={(e) =>
-                          setCurrentCommand({
-                            ...currentCommand,
-                            name: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
+        {/* Main Content */}
+        <div className="flex-1 p-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList>
+              <TabsTrigger value="settings" className={TABTRIGGER_STYLES}>
+                Setting
+              </TabsTrigger>
+              <TabsTrigger value="test" className={TABTRIGGER_STYLES}>
+                Test
+              </TabsTrigger>
+            </TabsList>
 
-                    <div>
-                      <label className="text-sm font-medium" htmlFor="nanoType">
-                        Type
-                      </label>
-                      <Select
-                        value={currentCommand?.nano}
-                        onValueChange={(value: NanoApi) => {
-                          setCurrentCommand({
-                            ...currentCommand,
-                            nano: value,
-                            options: defaultOptionsMap[value],
-                          });
-                        }}
-                      >
-                        <SelectTrigger
-                          id="nanoType"
-                          className={cn("text-black")}
-                        >
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white">
-                          {NANOTYPE_OPTIONS[category].map((option) => (
-                            <SelectItem
-                              key={option.value}
-                              value={option.value}
-                              className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
-                            >
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  {/* Dynamic Options Based on Type */}
-                  {currentCommand?.nano === "languageModel" && (
-                    <div className="space-y-4">
-                      <div className="w-full">
+            <TabsContent value="settings">
+              <Card className="rounded-lg border pt-4 text-black">
+                <CardContent className="px-4">
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
                         <label
                           className="text-sm font-medium"
-                          htmlFor="systemPrompt"
+                          htmlFor="commandName"
                         >
-                          System Prompt
+                          Name
                         </label>
-                        <Textarea
-                          id="systemPrompt"
-                          className="w-full rounded  text-sm placeholder:text-sm h-[150px] bg-white text-black"
-                          placeholder="Enter system prompt"
-                          value={
-                            (currentCommand.options as LMOptions)
-                              .systemPrompt || ""
-                          }
+                        <Input
+                          id="commandName"
+                          className={cn("bg-white text-black")}
+                          placeholder={"Enter name"}
+                          value={currentCommand?.name || ""}
                           onChange={(e) =>
                             setCurrentCommand({
                               ...currentCommand,
-                              options: {
-                                ...(currentCommand.options as LMOptions),
-                                systemPrompt: e.target.value,
-                              },
+                              name: e.target.value,
                             })
                           }
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-sm font-medium" htmlFor="topK">
-                            Top K
+
+                      <div>
+                        <label
+                          className="text-sm font-medium"
+                          htmlFor="nanoType"
+                        >
+                          Type
+                        </label>
+                        <Select
+                          value={currentCommand?.nano}
+                          onValueChange={(value: NanoApi) => {
+                            setCurrentCommand({
+                              ...currentCommand,
+                              nano: value,
+                              options: defaultOptionsMap[value],
+                            });
+                          }}
+                        >
+                          <SelectTrigger
+                            id="nanoType"
+                            className={cn("text-black")}
+                          >
+                            <SelectValue placeholder="Select type" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {NANOTYPE_OPTIONS[category].map((option) => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                                className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    {/* Dynamic Options Based on Type */}
+                    {currentCommand?.nano === "languageModel" && (
+                      <div className="space-y-4">
+                        <div className="w-full">
+                          <label
+                            className="text-sm font-medium"
+                            htmlFor="systemPrompt"
+                          >
+                            System Prompt
                           </label>
-                          <div className="flex items-center justify-between gap-2">
-                            <Slider
-                              id="topK"
-                              defaultValue={[
-                                (currentCommand.options as LMOptions).topK || 1,
-                              ]}
-                              max={8}
-                              step={1}
-                              onChange={(e) => {
-                                console.log(e, e.target.value);
+                          <Textarea
+                            id="systemPrompt"
+                            className="w-full rounded  text-sm placeholder:text-sm h-[150px] bg-white text-black"
+                            placeholder="Enter system prompt"
+                            value={
+                              (currentCommand.options as LMOptions)
+                                .systemPrompt || ""
+                            }
+                            onChange={(e) =>
+                              setCurrentCommand({
+                                ...currentCommand,
+                                options: {
+                                  ...(currentCommand.options as LMOptions),
+                                  systemPrompt: e.target.value,
+                                },
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="topK"
+                            >
+                              Top K
+                            </label>
+                            <div className="flex items-center justify-between gap-2">
+                              <Slider
+                                id="topK"
+                                defaultValue={[
+                                  (currentCommand.options as LMOptions).topK ||
+                                    1,
+                                ]}
+                                max={8}
+                                step={1}
+                                onChange={(e) => {
+                                  console.log(e, e.target.value);
+                                  setCurrentCommand({
+                                    ...currentCommand,
+                                    options: {
+                                      ...(currentCommand.options as LMOptions),
+                                      topK: Number.parseInt(e.target.value),
+                                    },
+                                  });
+                                }}
+                              />
+                              <Input
+                                disabled={true}
+                                value={
+                                  (currentCommand.options as LMOptions).topK ||
+                                  1
+                                }
+                                className={cn(
+                                  "bg-white text-black w-10 rounded  text-center",
+                                )}
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="temperature"
+                            >
+                              Temperature
+                            </label>
+                            <div className="flex items-center justify-between gap-2">
+                              <Slider
+                                id="temperature"
+                                defaultValue={[
+                                  (currentCommand.options as LMOptions)
+                                    .temperature || 0.1,
+                                ]}
+                                max={2}
+                                step={0.1}
+                                onChange={(e) => {
+                                  console.log(e, e.target.value);
+                                  setCurrentCommand({
+                                    ...currentCommand,
+                                    options: {
+                                      ...(currentCommand.options as LMOptions),
+                                      temperature: Number.parseFloat(
+                                        e.target.value,
+                                      ),
+                                    },
+                                  });
+                                }}
+                              />
+                              <Input
+                                disabled={true}
+                                value={
+                                  (currentCommand.options as LMOptions)
+                                    .temperature || 0.1
+                                }
+                                className={cn(
+                                  "bg-white text-black w-10 px-2 rounded text-center",
+                                )}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {currentCommand?.nano === "summarizer" && (
+                      <div className="space-y-4">
+                        <div>
+                          <label
+                            className="text-sm font-medium"
+                            htmlFor="summarizerContext"
+                          >
+                            Shared Context
+                          </label>
+                          <Textarea
+                            id="summarizerContext"
+                            className="w-full rounded  text-sm placeholder:text-sm h-[150px] bg-white text-black"
+                            placeholder="Enter shared context"
+                            value={
+                              (currentCommand.options as SummarizerOptions)
+                                .sharedContext || ""
+                            }
+                            onChange={(e) =>
+                              setCurrentCommand({
+                                ...currentCommand,
+                                options: {
+                                  ...(currentCommand.options as SummarizerOptions),
+                                  sharedContext: e.target.value,
+                                },
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="grid grid-cols-3 gap-4">
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="summarizerType"
+                            >
+                              Type
+                            </label>
+                            <Select
+                              value={
+                                (currentCommand.options as SummarizerOptions)
+                                  .type as string
+                              }
+                              onValueChange={(value) =>
                                 setCurrentCommand({
                                   ...currentCommand,
                                   options: {
-                                    ...(currentCommand.options as LMOptions),
-                                    topK: Number.parseInt(e.target.value),
+                                    ...(currentCommand.options as SummarizerOptions),
+                                    type: value as SummarizerOptions["type"],
                                   },
-                                });
-                              }}
-                            />
-                            <Input
-                              disabled={true}
-                              value={
-                                (currentCommand.options as LMOptions).topK || 1
+                                })
                               }
-                              className={cn(
-                                "bg-white text-black w-10 rounded  text-center",
-                              )}
-                            />
+                            >
+                              <SelectTrigger
+                                id="summarizerType"
+                                className="text-black"
+                              >
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white text-black">
+                                {SUMMARIZER_TYPE_OPTIONS.map((option) => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                    className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
-                        </div>
-                        <div>
-                          <label
-                            className="text-sm font-medium"
-                            htmlFor="temperature"
-                          >
-                            Temperature
-                          </label>
-                          <div className="flex items-center justify-between gap-2">
-                            <Slider
-                              id="temperature"
-                              defaultValue={[
-                                (currentCommand.options as LMOptions)
-                                  .temperature || 0.1,
-                              ]}
-                              max={2}
-                              step={0.1}
-                              onChange={(e) => {
-                                console.log(e, e.target.value);
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="summarizerFormat"
+                            >
+                              Format
+                            </label>
+                            <Select
+                              value={
+                                (currentCommand.options as SummarizerOptions)
+                                  .format as string
+                              }
+                              onValueChange={(value) =>
                                 setCurrentCommand({
                                   ...currentCommand,
                                   options: {
-                                    ...(currentCommand.options as LMOptions),
-                                    temperature: Number.parseFloat(
-                                      e.target.value,
-                                    ),
+                                    ...(currentCommand.options as SummarizerOptions),
+                                    format: value as "plain-text" | "markdown",
                                   },
-                                });
-                              }}
-                            />
-                            <Input
-                              disabled={true}
-                              value={
-                                (currentCommand.options as LMOptions)
-                                  .temperature || 0.1
+                                })
                               }
-                              className={cn(
-                                "bg-white text-black w-10 px-2 rounded text-center",
-                              )}
-                            />
+                            >
+                              <SelectTrigger
+                                id="summarizerFormat"
+                                className="bg-white text-black"
+                              >
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                {FORMAT_OPTIONS.map((option) => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                    className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="summarizerLength"
+                            >
+                              Length
+                            </label>
+                            <Select
+                              value={
+                                (currentCommand.options as SummarizerOptions)
+                                  .length as string
+                              }
+                              onValueChange={(value) =>
+                                setCurrentCommand({
+                                  ...currentCommand,
+                                  options: {
+                                    ...(currentCommand.options as SummarizerOptions),
+                                    length:
+                                      value as SummarizerOptions["length"],
+                                  },
+                                })
+                              }
+                            >
+                              <SelectTrigger
+                                id="summarizerLength"
+                                className="bg-white text-black"
+                              >
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                {LENGTH_OPTIONS.map((option) => (
+                                  <SelectItem
+                                    className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {currentCommand?.nano === "summarizer" && (
-                    <div className="space-y-4">
-                      <div>
-                        <label
-                          className="text-sm font-medium"
-                          htmlFor="summarizerContext"
-                        >
-                          Shared Context
-                        </label>
-                        <Textarea
-                          id="summarizerContext"
-                          className="w-full rounded  text-sm placeholder:text-sm h-[150px] bg-white text-black"
-                          placeholder="Enter shared context"
-                          value={
-                            (currentCommand.options as SummarizerOptions)
-                              .sharedContext || ""
-                          }
-                          onChange={(e) =>
-                            setCurrentCommand({
-                              ...currentCommand,
-                              options: {
-                                ...(currentCommand.options as SummarizerOptions),
-                                sharedContext: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="grid grid-cols-3 gap-4">
+                    {currentCommand?.nano === "writer" && (
+                      <div className="space-y-4">
                         <div>
                           <label
                             className="text-sm font-medium"
-                            htmlFor="summarizerType"
+                            htmlFor="writerContext"
                           >
-                            Type
+                            Shared Context
                           </label>
-                          <Select
-                            value={
-                              (currentCommand.options as SummarizerOptions)
-                                .type as string
-                            }
-                            onValueChange={(value) =>
-                              setCurrentCommand({
-                                ...currentCommand,
-                                options: {
-                                  ...(currentCommand.options as SummarizerOptions),
-                                  type: value as SummarizerOptions["type"],
-                                },
-                              })
-                            }
-                          >
-                            <SelectTrigger
-                              id="summarizerType"
-                              className="text-black"
-                            >
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white text-black">
-                              {SUMMARIZER_TYPE_OPTIONS.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                  className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <label
-                            className="text-sm font-medium"
-                            htmlFor="summarizerFormat"
-                          >
-                            Format
-                          </label>
-                          <Select
-                            value={
-                              (currentCommand.options as SummarizerOptions)
-                                .format as string
-                            }
-                            onValueChange={(value) =>
-                              setCurrentCommand({
-                                ...currentCommand,
-                                options: {
-                                  ...(currentCommand.options as SummarizerOptions),
-                                  format: value as "plain-text" | "markdown",
-                                },
-                              })
-                            }
-                          >
-                            <SelectTrigger
-                              id="summarizerFormat"
-                              className="bg-white text-black"
-                            >
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white">
-                              {FORMAT_OPTIONS.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                  className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <label
-                            className="text-sm font-medium"
-                            htmlFor="summarizerLength"
-                          >
-                            Length
-                          </label>
-                          <Select
-                            value={
-                              (currentCommand.options as SummarizerOptions)
-                                .length as string
-                            }
-                            onValueChange={(value) =>
-                              setCurrentCommand({
-                                ...currentCommand,
-                                options: {
-                                  ...(currentCommand.options as SummarizerOptions),
-                                  length: value as SummarizerOptions["length"],
-                                },
-                              })
-                            }
-                          >
-                            <SelectTrigger
-                              id="summarizerLength"
-                              className="bg-white text-black"
-                            >
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white">
-                              {LENGTH_OPTIONS.map((option) => (
-                                <SelectItem
-                                  className="bg-white text-black dark:hover:text-black dark:hover:bg-[#eee]"
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {currentCommand?.nano === "writer" && (
-                    <div className="space-y-4">
-                      <div>
-                        <label
-                          className="text-sm font-medium"
-                          htmlFor="writerContext"
-                        >
-                          Shared Context
-                        </label>
-                        <Textarea
-                          id="writerContext"
-                          className="w-full rounded  text-sm placeholder:text-sm"
-                          placeholder="Enter shared context"
-                          value={
-                            (currentCommand.options as WriterOptions)
-                              .sharedContext || ""
-                          }
-                          onChange={(e) =>
-                            setCurrentCommand({
-                              ...currentCommand,
-                              options: {
-                                ...(currentCommand.options as WriterOptions),
-                                sharedContext: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="grid grid-cols-3 gap-4">
-                        <div>
-                          <label
-                            className="text-sm font-medium"
-                            htmlFor="writerTone"
-                          >
-                            Tone
-                          </label>
-                          <Select
+                          <Textarea
+                            id="writerContext"
+                            className="w-full rounded  text-sm placeholder:text-sm"
+                            placeholder="Enter shared context"
                             value={
                               (currentCommand.options as WriterOptions)
-                                .tone as string
+                                .sharedContext || ""
                             }
-                            onValueChange={(value) =>
+                            onChange={(e) =>
                               setCurrentCommand({
                                 ...currentCommand,
                                 options: {
                                   ...(currentCommand.options as WriterOptions),
-                                  tone: value as WriterOptions["tone"],
+                                  sharedContext: e.target.value,
                                 },
                               })
                             }
-                          >
-                            <SelectTrigger id="writerTone">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white">
-                              {WRITER_TONE_OPTIONS.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          />
                         </div>
-                        <div>
-                          <label
-                            className="text-sm font-medium"
-                            htmlFor="writerFormat"
-                          >
-                            Format
-                          </label>
-                          <Select
-                            value={
-                              (currentCommand.options as WriterOptions)
-                                .format as string
-                            }
-                            onValueChange={(value) =>
-                              setCurrentCommand({
-                                ...currentCommand,
-                                options: {
-                                  ...(currentCommand.options as WriterOptions),
-                                  format: value as "plain-text" | "markdown",
-                                },
-                              })
-                            }
-                          >
-                            <SelectTrigger id="writerFormat">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white">
-                              {FORMAT_OPTIONS.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <label
-                            className="text-sm font-medium"
-                            htmlFor="writerLength"
-                          >
-                            Length
-                          </label>
-                          <Select
-                            value={
-                              (currentCommand.options as WriterOptions)
-                                .length as string
-                            }
-                            onValueChange={(value) =>
-                              setCurrentCommand({
-                                ...currentCommand,
-                                options: {
-                                  ...(currentCommand.options as WriterOptions),
-                                  length: value as WriterOptions["length"],
-                                },
-                              })
-                            }
-                          >
-                            <SelectTrigger id="writerLength">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white">
-                              {LENGTH_OPTIONS.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                        <div className="grid grid-cols-3 gap-4">
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="writerTone"
+                            >
+                              Tone
+                            </label>
+                            <Select
+                              value={
+                                (currentCommand.options as WriterOptions)
+                                  .tone as string
+                              }
+                              onValueChange={(value) =>
+                                setCurrentCommand({
+                                  ...currentCommand,
+                                  options: {
+                                    ...(currentCommand.options as WriterOptions),
+                                    tone: value as WriterOptions["tone"],
+                                  },
+                                })
+                              }
+                            >
+                              <SelectTrigger id="writerTone">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                {WRITER_TONE_OPTIONS.map((option) => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="writerFormat"
+                            >
+                              Format
+                            </label>
+                            <Select
+                              value={
+                                (currentCommand.options as WriterOptions)
+                                  .format as string
+                              }
+                              onValueChange={(value) =>
+                                setCurrentCommand({
+                                  ...currentCommand,
+                                  options: {
+                                    ...(currentCommand.options as WriterOptions),
+                                    format: value as "plain-text" | "markdown",
+                                  },
+                                })
+                              }
+                            >
+                              <SelectTrigger id="writerFormat">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                {FORMAT_OPTIONS.map((option) => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="writerLength"
+                            >
+                              Length
+                            </label>
+                            <Select
+                              value={
+                                (currentCommand.options as WriterOptions)
+                                  .length as string
+                              }
+                              onValueChange={(value) =>
+                                setCurrentCommand({
+                                  ...currentCommand,
+                                  options: {
+                                    ...(currentCommand.options as WriterOptions),
+                                    length: value as WriterOptions["length"],
+                                  },
+                                })
+                              }
+                            >
+                              <SelectTrigger id="writerLength">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                {LENGTH_OPTIONS.map((option) => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {currentCommand?.nano === "rewriter" && (
-                    <div className="space-y-4">
-                      <div>
-                        <label
-                          className="text-sm font-medium"
-                          htmlFor="rewriterContext"
-                        >
-                          Shared Context
-                        </label>
-                        <Textarea
-                          id="rewriterContext"
-                          className="w-full rounded  text-sm placeholder:text-sm"
-                          placeholder="Enter shared context"
-                          value={
-                            (currentCommand.options as RewriterOptions)
-                              .sharedContext || ""
-                          }
-                          onChange={(e) =>
-                            setCurrentCommand({
-                              ...currentCommand,
-                              options: {
-                                ...(currentCommand.options as RewriterOptions),
-                                sharedContext: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="grid grid-cols-3 gap-4">
+                    {currentCommand?.nano === "rewriter" && (
+                      <div className="space-y-4">
                         <div>
                           <label
                             className="text-sm font-medium"
-                            htmlFor="rewriterTone"
+                            htmlFor="rewriterContext"
                           >
-                            Tone
+                            Shared Context
                           </label>
-                          <Select
+                          <Textarea
+                            id="rewriterContext"
+                            className="w-full rounded  text-sm placeholder:text-sm"
+                            placeholder="Enter shared context"
                             value={
                               (currentCommand.options as RewriterOptions)
-                                .tone as string
+                                .sharedContext || ""
                             }
-                            onValueChange={(value) =>
+                            onChange={(e) =>
                               setCurrentCommand({
                                 ...currentCommand,
                                 options: {
                                   ...(currentCommand.options as RewriterOptions),
-                                  tone: value as RewriterOptions["tone"],
+                                  sharedContext: e.target.value,
                                 },
                               })
                             }
-                          >
-                            <SelectTrigger id="rewriterTone">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white">
-                              {REWRITER_TONE_OPTIONS.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          />
                         </div>
-                        <div>
-                          <label
-                            className="text-sm font-medium"
-                            htmlFor="rewriterFormat"
-                          >
-                            Format
-                          </label>
-                          <Select
-                            value={
-                              (currentCommand.options as RewriterOptions)
-                                .format as string
-                            }
-                            onValueChange={(value) =>
-                              setCurrentCommand({
-                                ...currentCommand,
-                                options: {
-                                  ...(currentCommand.options as RewriterOptions),
-                                  format: value as RewriterOptions["format"],
-                                },
-                              })
-                            }
-                          >
-                            <SelectTrigger id="rewriterFormat">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white">
-                              {REWRITER_FORMAT_OPTIONS.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <label
-                            className="text-sm font-medium"
-                            htmlFor="rewriterLength"
-                          >
-                            Length
-                          </label>
-                          <Select
-                            value={
-                              (currentCommand.options as RewriterOptions)
-                                .length as string
-                            }
-                            onValueChange={(value) =>
-                              setCurrentCommand({
-                                ...currentCommand,
-                                options: {
-                                  ...(currentCommand.options as RewriterOptions),
-                                  length: value as RewriterOptions["length"],
-                                },
-                              })
-                            }
-                          >
-                            <SelectTrigger id="rewriterLength">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white">
-                              {REWRITER_LENGTH_OPTIONS.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                        <div className="grid grid-cols-3 gap-4">
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="rewriterTone"
+                            >
+                              Tone
+                            </label>
+                            <Select
+                              value={
+                                (currentCommand.options as RewriterOptions)
+                                  .tone as string
+                              }
+                              onValueChange={(value) =>
+                                setCurrentCommand({
+                                  ...currentCommand,
+                                  options: {
+                                    ...(currentCommand.options as RewriterOptions),
+                                    tone: value as RewriterOptions["tone"],
+                                  },
+                                })
+                              }
+                            >
+                              <SelectTrigger id="rewriterTone">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                {REWRITER_TONE_OPTIONS.map((option) => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="rewriterFormat"
+                            >
+                              Format
+                            </label>
+                            <Select
+                              value={
+                                (currentCommand.options as RewriterOptions)
+                                  .format as string
+                              }
+                              onValueChange={(value) =>
+                                setCurrentCommand({
+                                  ...currentCommand,
+                                  options: {
+                                    ...(currentCommand.options as RewriterOptions),
+                                    format: value as RewriterOptions["format"],
+                                  },
+                                })
+                              }
+                            >
+                              <SelectTrigger id="rewriterFormat">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                {REWRITER_FORMAT_OPTIONS.map((option) => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <label
+                              className="text-sm font-medium"
+                              htmlFor="rewriterLength"
+                            >
+                              Length
+                            </label>
+                            <Select
+                              value={
+                                (currentCommand.options as RewriterOptions)
+                                  .length as string
+                              }
+                              onValueChange={(value) =>
+                                setCurrentCommand({
+                                  ...currentCommand,
+                                  options: {
+                                    ...(currentCommand.options as RewriterOptions),
+                                    length: value as RewriterOptions["length"],
+                                  },
+                                })
+                              }
+                            >
+                              <SelectTrigger id="rewriterLength">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                {REWRITER_LENGTH_OPTIONS.map((option) => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                  {}
-                  {5 - commands.length > 0 && (
-                    <div className="font-bold flex justify-end">
-                      Left: {5 - commands.length}
-                    </div>
-                  )}
+                    )}
+                    {}
+                    {5 - commands.length > 0 && (
+                      <div className="font-bold flex justify-end">
+                        Left: {5 - commands.length}
+                      </div>
+                    )}
 
-                  {error && (
-                    <Alert variant="destructive">
-                      <AlertTriangle className="h-4 w-4" />
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
+                    {error && (
+                      <Alert variant="destructive">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertDescription>{error}</AlertDescription>
+                      </Alert>
+                    )}
 
-                  <div className="flex gap-2">
-                    <Button
-                      type="submit"
-                      className={cn(
-                        "px-4 py-2 rounded-full border-0 justify-start",
-                        "cursor-pointer",
-                        "transition-colors duration-300",
-                        "bg-primary hover:opacity-75 hover:bg-primary text-white dark:text-white justify-center",
-                        commands.length >= 5 &&
-                          !isEditing &&
-                          "opacity-50 cursor-not-allowed",
-                      )}
-                      disabled={commands.length >= 5 && !isEditing}
-                    >
-                      {isEditing ? (
-                        <>
-                          <Save className="w-4 h-4 mr-2" /> Update
-                        </>
-                      ) : (
-                        <>
-                          <Plus className="w-4 h-4 mr-2" /> Add
-                        </>
-                      )}
-                    </Button>
-                    {(isEditing || currentCommand?.name) && (
+                    <div className="flex gap-2">
                       <Button
-                        type="button"
-                        variant="outline"
+                        type="submit"
                         className={cn(
-                          "px-4 py-2 rounded-full border justify-start",
+                          "px-4 py-2 rounded-full border-0 justify-start",
                           "cursor-pointer",
                           "transition-colors duration-300",
-                          "bg-white hover:bg-accent hover:text-accent-foreground text-black justify-center",
+                          "bg-primary hover:opacity-75 hover:bg-primary text-white dark:text-white justify-center",
+                          commands.length >= 5 &&
+                            !isEditing &&
+                            "opacity-50 cursor-not-allowed",
                         )}
-                        onClick={handleCancel}
+                        disabled={commands.length >= 5 && !isEditing}
                       >
-                        <X className="w-4 h-4 mr-2" /> Cancel
+                        {isEditing ? (
+                          <>
+                            <Save className="w-4 h-4 mr-2" /> Update
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="w-4 h-4 mr-2" /> Add
+                          </>
+                        )}
                       </Button>
-                    )}
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                      {(isEditing || currentCommand?.name) && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className={cn(
+                            "px-4 py-2 rounded-full border justify-start",
+                            "cursor-pointer",
+                            "transition-colors duration-300",
+                            "bg-white hover:bg-accent hover:text-accent-foreground text-black justify-center",
+                          )}
+                          onClick={handleCancel}
+                        >
+                          <X className="w-4 h-4 mr-2" /> Cancel
+                        </Button>
+                      )}
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-          <TabsContent value="test" className="h-[520px]">
-            <CommandTestTab command={currentCommand} category={category} />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="test" className="h-[463px]">
+              <CommandTestTab command={currentCommand} category={category} />
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent className="text-black">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the "
+                {commandToDelete?.name}".
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                onClick={() => setShowDeleteDialog(false)}
+                className="rounded-full hover:text-white"
+              >
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmDelete}
+                className="text-white rounded-full hover:bg-primary hover:opacity-75"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
-
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent className="text-black">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the "
-              {commandToDelete?.name}".
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel
-              onClick={() => setShowDeleteDialog(false)}
-              className="rounded-full hover:text-white"
-            >
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              className="text-white rounded-full hover:bg-primary hover:opacity-75"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };
