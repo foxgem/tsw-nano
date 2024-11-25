@@ -95,9 +95,8 @@ export function cleanPageText() {
   for (const el of temp.querySelectorAll("code, pre, script, style, img")) {
     el.remove();
   }
-  const result = temp.innerText.replace(/\s+/g, " ").trim();
-  const contentWithURL = `Current page URL: ${window.location.href}\n\nCurrent page content:\n\n${result}`;
-  return contentWithURL;
+
+  return temp.innerText.replace(/\s+/g, " ").trim();
 }
 
 export function chattingHandler(outputElm: string) {
@@ -113,6 +112,7 @@ export function chattingHandler(outputElm: string) {
   root.render(
     React.createElement(TSWChattingPanel, {
       pageText: cleanPageText(),
+      pageURL: window.location.href,
       onRender: () => {
         const closeButton = document.querySelector("#tsw-close-panel");
         if (closeButton) {
