@@ -1,8 +1,8 @@
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
 import type { Command, NanoApi } from "./types";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 const checkNanoAvailability = async (api: NanoApi) => {
   if (!window.ai?.[api]) {
