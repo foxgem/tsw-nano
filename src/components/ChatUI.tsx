@@ -27,17 +27,19 @@ marked.setOptions({
   breaks: true,
 });
 
-const prepareSystemPrompt = async (pageText: string, customPrompt?: string) => {
-  let pageContent = pageText;
-  if (pageText.length >= 30000) {
-    pageContent = await summariseLongContext(pageText);
-  }
+const prepareSystemPrompt = async (
+  pageText: string,
+  pageURL: string,
+  customPrompt?: string,
+) => {
+  const pageContent =
+    pageText.length >= 30000 ? await summariseLongContext(pageText) : pageText;
 
   if (customPrompt) {
-    return `${customPrompt}\n\nThis page content:\n\n${pageContent}`;
+    return `${customPrompt}\n\nThis page URL: ${pageURL}\n\nThis page content:\n\n${pageContent}`;
   }
 
-  return pageRagPrompt(pageContent);
+  return `This page URL: ${pageURL}\n\n${pageRagPrompt(pageContent)}`;
 };
 
 type Message = {
@@ -50,9 +52,10 @@ type Message = {
 
 export interface ChatUIProps {
   readonly pageText: string;
+  readonly pageURL: string;
 }
 
-export function ChatUI({ pageText }: ChatUIProps) {
+export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -159,7 +162,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
             : (systemPrompt.options as LMOptions).systemPrompt;
         const textStream = await nanoPrompt(
           newMessages[newMessages.length - 1].content,
-          await prepareSystemPrompt(pageText, customPrompt),
+          await prepareSystemPrompt(pageText, pageURL, customPrompt),
         );
         let fullText = "";
 

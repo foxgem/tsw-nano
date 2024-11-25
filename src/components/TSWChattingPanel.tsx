@@ -8,11 +8,13 @@ import { Toaster } from "./ui/toaster";
 
 export interface ChattingPanelProps {
   pageText: string;
+  pageURL: string;
   onRender: () => void;
 }
 
 export function TSWChattingPanel({
   pageText,
+  pageURL,
   onRender,
 }: Readonly<ChattingPanelProps>) {
   useEffect(() => {
@@ -49,7 +51,7 @@ export function TSWChattingPanel({
       </div>
       <div className={panelStyles.tswPanelContent}>
         <div id="tsw-output-body">
-          <ChatUI pageText={pageText} />
+          <ChatUI pageText={pageText} pageURL={pageURL} />
         </div>
       </div>
 
