@@ -92,11 +92,12 @@ export async function translateSelected(
 
 export function cleanPageText() {
   const temp = document.body.cloneNode(true) as HTMLElement;
-  temp
-    .querySelectorAll("code, pre, script, style, img")
-    .forEach((el) => el.remove());
+  for (const el of temp.querySelectorAll("code, pre, script, style, img")) {
+    el.remove();
+  }
   const result = temp.innerText.replace(/\s+/g, " ").trim();
-  return result;
+  const contentWithURL = `Current page URL: ${window.location.href}\n\nCurrent page content:\n\n${result}`;
+  return contentWithURL;
 }
 
 export function chattingHandler(outputElm: string) {

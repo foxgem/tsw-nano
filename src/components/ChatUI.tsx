@@ -27,13 +27,17 @@ marked.setOptions({
   breaks: true,
 });
 
-const preparePageRagPrompt = async (pageText: string) => {
+const prepareSystemPrompt = async (pageText: string, customPrompt?: string) => {
+  let pageContent = pageText;
   if (pageText.length >= 30000) {
-    const summarized = await summariseLongContext(pageText);
-    return pageRagPrompt(summarized);
+    pageContent = await summariseLongContext(pageText);
   }
 
-  return pageRagPrompt(pageText);
+  if (customPrompt) {
+    return `${customPrompt}\n\nThis page content:\n\n${pageContent}`;
+  }
+
+  return pageRagPrompt(pageContent);
 };
 
 type Message = {
@@ -149,11 +153,13 @@ export function ChatUI({ pageText }: ChatUIProps) {
           },
         ]);
 
+        const customPrompt =
+          systemPrompt.name === "Default"
+            ? undefined
+            : (systemPrompt.options as LMOptions).systemPrompt;
         const textStream = await nanoPrompt(
           newMessages[newMessages.length - 1].content,
-          systemPrompt.name === "Default"
-            ? await preparePageRagPrompt(pageText)
-            : (systemPrompt.options as LMOptions).systemPrompt,
+          await prepareSystemPrompt(pageText, customPrompt),
         );
         let fullText = "";
 
