@@ -60,14 +60,13 @@
     "typescript": "5.5.4"
   },
   "manifest": {
-    "permissions": ["tabs", "storage", "alarms", "activeTab"],
+    "permissions": ["tabs", "storage", "activeTab"],
     "background": {
       "service_worker": "background.ts"
     },
-    "name": "tsw-nano - tiny smart worker powered by gemini nano",
+    "name": "tsw-nano - tiny smart worker powered by Gemini Nano",
     "description": "Your tiny smart worker powered by Gemini Nano",
     "version": "0.1.0",
-    "host_permissions": ["https://*/*"],
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
